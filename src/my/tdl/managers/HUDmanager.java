@@ -16,8 +16,6 @@ import my.project.gop.main.Light;
 import my.project.gop.main.Vector2F;
 import my.project.gop.main.loadImageFrom;
 import my.tdl.MoveableObjects.Player;
-import my.tdl.generator.ChatBox;
-import my.tdl.generator.MessageBaloon;
 import my.tdl.generator.World;
 import my.tdl.main.Main;
 

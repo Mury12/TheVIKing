@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package my.tdl.generator;
 
 import java.awt.AlphaComposite;
@@ -15,7 +10,6 @@ import my.project.gop.main.loadImageFrom;
 import my.tdl.main.Main;
 
 /**
- *
  * @author Andre
  */
 public class MessageBaloon {
@@ -23,8 +17,8 @@ public class MessageBaloon {
     private static BufferedImage msg_bgbody = loadImageFrom.LoadImageFrom(Main.class, "msg_bgbody.png");
     private static BufferedImage msg_bgtail = loadImageFrom.LoadImageFrom(Main.class, "msg_tailbg.png");
     private static BufferedImage msg_bgright = loadImageFrom.LoadImageFrom(Main.class, "msg_bgright.png");
-    public static String msg;
-    public static Graphics2D g;
+    public String msg;
+    public Graphics2D g;
     private static FontMetrics fm;
     public MessageBaloon() {
     }
