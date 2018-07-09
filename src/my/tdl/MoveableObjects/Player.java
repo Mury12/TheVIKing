@@ -252,7 +252,6 @@ public class Player implements KeyListener {
     }
 
     public void recoverStamina(double amount) {
-        setMsg(getStamina() >= 50, " ");
         if (stamina < 100) {
             stamina += amount;
         }
@@ -261,7 +260,6 @@ public class Player implements KeyListener {
             setMsg(false, " ");
             if (!isMsgSet()) {
                 System.out.println("Ready to Run!");
-                setMsg(true, randomStaminAlert());
             }
         }
     }
