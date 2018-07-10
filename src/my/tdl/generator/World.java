@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package my.tdl.generator;
 
 import java.awt.Graphics2D;
@@ -31,15 +26,16 @@ public class World {
     private BufferedImage map;
     private int world_width;
     private int world_height;
-    public static CopyOnWriteArrayList<BlockEntity> blockents;
-    public static int blockSize = Block.BlockSize;    
+//    public static CopyOnWriteArrayList<BlockView> blockents;
+    public static int blockSize = BlockModel.BlockSize;    
     public boolean hasSize = false;
     private FPS fps = new FPS();
     public Vector2F spawnPos;
     public boolean hasGenerated;
     private Hostile mob;
+    private BlockController bc = new BlockController();
     //WorldSpawn
-    private Block spawn;
+    private BlockModel spawn;
     
     public World(String worldName, BufferedImage world_image, int w_width, int w_height) {
         this.worldName = worldName;
@@ -59,7 +55,6 @@ public class World {
     }
     
     public void init(){
-        blockents = new CopyOnWriteArrayList<>();
         tiles = new TileManager(this);
         mob = new Hostile(new Vector2F(2, 2));
         map_pos.xpos = spawn.getBlockLocation().xpos - player.getPos().xpos + 10;
@@ -90,36 +85,36 @@ public class World {
                     switch (col & 0xFFFFFF) { //0xFFFFFF é o código da cor utilizada para preencher com os tiles stone_1
                         //FLOORS
                         case 0x808080: //caso a cor seja...
-                            tiles.blocks.add(new Block(new Vector2F(x * blockSize, y * blockSize), Block.BlockType.STONE_1)); // *32 faz com que cada bloco seja exibido em 32x32 px
+                            tiles.blocks.add(new BlockModel(new Vector2F(x * blockSize, y * blockSize), BlockModel.BlockType.STONE_1)); // *32 faz com que cada bloco seja exibido em 32x32 px
                             break;
                         case 0xFFFEB8:
-                            tiles.blocks.add(new Block(new Vector2F(x * blockSize, y * blockSize), Block.BlockType.SAND_1));
+                            tiles.blocks.add(new BlockModel(new Vector2F(x * blockSize, y * blockSize), BlockModel.BlockType.SAND_1));
                             break;
                         case 0x828126:
-                            tiles.blocks.add(new Block(new Vector2F(x * blockSize, y * blockSize), Block.BlockType.DIRT_1));
+                            tiles.blocks.add(new BlockModel(new Vector2F(x * blockSize, y * blockSize), BlockModel.BlockType.DIRT_1));
                             break;
                         case 0xd5c768:
-                            tiles.blocks.add(new Block(new Vector2F(x * blockSize, y * blockSize), Block.BlockType.WOOD_1));
+                            tiles.blocks.add(new BlockModel(new Vector2F(x * blockSize, y * blockSize), BlockModel.BlockType.WOOD_1));
                             break;
                         case 0xaa9f54:
-                            tiles.blocks.add(new Block(new Vector2F(x * blockSize, y * blockSize), Block.BlockType.WOOD_2_V));
+                            tiles.blocks.add(new BlockModel(new Vector2F(x * blockSize, y * blockSize), BlockModel.BlockType.WOOD_2_V));
                             break;
                         case 0x69c33c:
-                            tiles.blocks.add(new Block(new Vector2F(x * blockSize, y * blockSize), Block.BlockType.GRASS_1));
+                            tiles.blocks.add(new BlockModel(new Vector2F(x * blockSize, y * blockSize), BlockModel.BlockType.GRASS_1));
                             break;
 
                         //WALLS
                         case 0x404040: //caso a cor seja...
-                            tiles.blocks.add(new Block(new Vector2F(x * blockSize, y * blockSize), Block.BlockType.WALL_1).isSolid(true)); // *32 faz com que cada bloco seja exibido em 32x32 px
+                            tiles.blocks.add(new BlockModel(new Vector2F(x * blockSize, y * blockSize), BlockModel.BlockType.WALL_1).isSolid(true)); // *32 faz com que cada bloco seja exibido em 32x32 px
                             break;
                         case 0xFFFC00:
-                            tiles.blocks.add(new Block(new Vector2F(x * blockSize, y * blockSize), Block.BlockType.WALL_1_TORCH).isSolid(true));
+                            tiles.blocks.add(new BlockModel(new Vector2F(x * blockSize, y * blockSize), BlockModel.BlockType.WALL_1_TORCH).isSolid(true));
                             break;
                         case 0xB8B8B8:
-                            tiles.blocks.add(new Block(new Vector2F(x * blockSize, y * blockSize), Block.BlockType.WALL_1_ROOF).isSolid(true));
+                            tiles.blocks.add(new BlockModel(new Vector2F(x * blockSize, y * blockSize), BlockModel.BlockType.WALL_1_ROOF).isSolid(true));
                             break;
                         case 0xAEB459:
-                            tiles.blocks.add(new Block(new Vector2F(x * blockSize, y * blockSize), Block.BlockType.SPAWN_POS));
+                            tiles.blocks.add(new BlockModel(new Vector2F(x * blockSize, y * blockSize), BlockModel.BlockType.SPAWN_POS));
                             break;
 
                     }
@@ -142,8 +137,8 @@ public class World {
         }
         tiles.tick(deltaTime);
         
-        if (!blockents.isEmpty()) {
-            for (BlockEntity ent : blockents) {
+        if (!bc.getBlockEnts().isEmpty()) {
+            for (BlockView ent : bc.getBlockEnts()) {
                 if (player.render.intersects(ent)) {
                     ent.tick(deltaTime);
                     ent.setAlive(true);
@@ -156,10 +151,10 @@ public class World {
         player.tick(deltaTime);
     }
     
-    public static void dropBlockEntity(Vector2F pos, BufferedImage block_image){
-        BlockEntity ent = new BlockEntity(pos, block_image);
-        if(!blockents.contains(ent)){
-            blockents.add(ent);
+    public void dropBlockEntity(Vector2F pos, BufferedImage block_image){
+        BlockView ent = new BlockView(pos, block_image);
+        if(!bc.getBlockEnts().contains(ent)){
+            bc.addEntityToBlock(ent);
         }
     }
     
@@ -167,7 +162,7 @@ public class World {
         if(xPos < world_width || yPos < world_height)
         if(xPos < world_width){
             if(yPos < world_height){
-                Block setspw = new Block(new Vector2F(xPos*blockSize, yPos*blockSize));
+                BlockModel setspw = new BlockModel(new Vector2F(xPos*blockSize, yPos*blockSize));
                 this.spawn = setspw;
             }else{
                 System.out.println("Y spawn position out of the map!");
@@ -182,9 +177,9 @@ public class World {
        return spawn.pos;
    }
     
-    public static void removeDropedEntity(BlockEntity blockEntity) {
-        if(blockents.contains(blockEntity)){
-            blockents.remove(blockEntity);
+    public void removeDropedEntity(BlockView blockEntity) {
+        if(bc.getBlockEnts().contains(blockEntity)){
+            bc.removeEntityFromBlock(blockEntity);
         }
     }
     
@@ -195,8 +190,8 @@ public class World {
             spawn.render(g);
         }
         ///descarrega os blocos que não estão na tela
-        if(!blockents.isEmpty()){ //só renderiza se não estiver vazio, diminuindo o lag
-            for(BlockEntity ent : blockents){
+        if(!bc.isEntEmpty()){ //só renderiza se não estiver vazio, diminuindo o lag
+            for(BlockView ent : bc.getBlockEnts()){
                 if(player.render.intersects(ent))
                     ent.render(g);
             }
@@ -208,7 +203,7 @@ public class World {
         
         if(Player.isDebugging()){
             String str = "BlockEnt";
-            g.drawString("BlockEnt:  "+blockents.size(), Main.width - (str.length()+5)*8, 10);
+            g.drawString("BlockEnt:  "+bc.getBlockEnts().size(), Main.width - (str.length()+5)*8, 10);
             g.drawString("FPS:  "+(int)fps.getFps(), Main.width - (str.length()+5)*8, 23);
         }
     }
@@ -280,7 +275,7 @@ public class World {
     public void resetWorld(){
         tiles.getBlocks().clear();
         tiles.getLoaded_blocks().clear();
-        blockents.clear();
+        bc.clearBlockEntities();
         spawn = null;
     }
 }

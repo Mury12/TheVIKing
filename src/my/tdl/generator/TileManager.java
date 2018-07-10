@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package my.tdl.generator;
 
 import java.awt.Graphics2D;
@@ -15,8 +10,8 @@ import my.tdl.MoveableObjects.Player;
  */
 public class TileManager {
     
-    public static ArrayList<Block> blocks = new ArrayList<>(); //cria um array de blocos para renderizar
-    public static ArrayList<Block> loaded_blocks = new ArrayList<>();
+    public static ArrayList<BlockModel> blocks = new ArrayList<>(); //cria um array de blocos para renderizar
+    public static ArrayList<BlockModel> loaded_blocks = new ArrayList<>();
     private World world;
     
     public TileManager(){
@@ -28,7 +23,7 @@ public class TileManager {
     }
     
     public void tick(double deltaTime) {
-        for (Block block : blocks) {
+        for (BlockModel block : blocks) {
             block.tick(deltaTime);
 
             if (world.getPlayer().render.intersects(block)) {
@@ -51,16 +46,16 @@ public class TileManager {
     }
     
     public void render(Graphics2D g){
-        for(Block block : blocks){
+        for(BlockModel block : blocks){
             block.render(g);
         }
     }
 
-    public static ArrayList<Block> getBlocks() {
+    public static ArrayList<BlockModel> getBlocks() {
         return blocks;
     }
 
-    public static ArrayList<Block> getLoaded_blocks() {
+    public static ArrayList<BlockModel> getLoaded_blocks() {
         return loaded_blocks;
     }
     
