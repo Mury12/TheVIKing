@@ -15,7 +15,6 @@ import my.tdl.MoveableObjects.Hostile;
 import my.tdl.MoveableObjects.Player;
 import my.tdl.gamestate.GameStateManager;
 import my.tdl.gamestates.DungeonLevelLoader;
-import static my.tdl.gamestates.DungeonLevelLoader.world;
 import my.tdl.main.Main;
 
 /**
