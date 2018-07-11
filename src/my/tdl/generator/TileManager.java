@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package my.tdl.generator;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import jdk.nashorn.internal.ir.Block;
 import my.tdl.MoveableObjects.Player;
 
 /**
@@ -15,8 +11,8 @@ import my.tdl.MoveableObjects.Player;
  */
 public class TileManager {
     
-    public static ArrayList<Block> blocks = new ArrayList<>(); //cria um array de blocos para renderizar
-    public static ArrayList<Block> loaded_blocks = new ArrayList<>();
+    public static BlockController blocks = new BlockController();
+    public static BlockController loaded_blocks = new BlockController();
     private World world;
     
     public TileManager(){
@@ -28,40 +24,40 @@ public class TileManager {
     }
     
     public void tick(double deltaTime) {
-        for (Block block : blocks) {
+        for (BlockModel block : blocks.getBlockModel()) {
             block.tick(deltaTime);
 
             if (world.getPlayer().render.intersects(block)) {
                 block.setAlive(true);
-                    if(!loaded_blocks.contains(block)){
-                        loaded_blocks.add(block);
+                    if(!loaded_blocks.getBlockModel().contains(block)){
+                        loaded_blocks.addBlockToModel(block);
                     }
             } else {
-                if (loaded_blocks.contains(block)) {
-                    loaded_blocks.remove(block);
+                if (loaded_blocks.getBlockModel().contains(block)) {
+                    loaded_blocks.removeBlockFromModel(block);
                 }
                 block.setAlive(false);
             }
             if(!world.getPlayer().isDebugging()){
-                if(!loaded_blocks.isEmpty()){
-                    loaded_blocks.clear();
+                if(!loaded_blocks.isBlockModelEmpty()){
+                    loaded_blocks.clearBlockModel();
                 }
             }
         }
     }
     
     public void render(Graphics2D g){
-        for(Block block : blocks){
+        for(BlockModel block : blocks.getBlockModel()){
             block.render(g);
         }
     }
 
-    public static ArrayList<Block> getBlocks() {
-        return blocks;
+    public static ArrayList<BlockModel> getBlocks() {
+        return blocks.getBlockModel();
     }
 
-    public static ArrayList<Block> getLoaded_blocks() {
-        return loaded_blocks;
+    public static ArrayList<BlockModel> getLoaded_blocks() {
+        return loaded_blocks.getBlockModel();
     }
     
 }

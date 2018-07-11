@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package my.tdl.generator;
 
 import java.awt.AlphaComposite;
@@ -16,7 +11,7 @@ import my.project.gop.main.Vector2F;
  *
  * @author Andre
  */
-public class BlockEntity extends Rectangle{
+public class BlockView extends Rectangle{
     
     private Vector2F pos;
     private BufferedImage block_image;    
@@ -27,8 +22,9 @@ public class BlockEntity extends Rectangle{
     private int lifeTime;
     private boolean isDying;
     private float lifeFade = 1.0f;
+    private World world;
             
-    public BlockEntity(Vector2F pos, BufferedImage block_image) {
+    public BlockView(Vector2F pos, BufferedImage block_image) {
         this.block_image = block_image;
         this.pos = pos;
         
@@ -67,7 +63,7 @@ public class BlockEntity extends Rectangle{
                     pos.ypos += 0.1;
                 }
                 if(lifeFade <= 0.1){
-                    World.removeDropedEntity(this);
+                    world.removeDropedEntity(this);
                     isAlive = false;
                 }
             }

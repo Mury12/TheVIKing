@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package my.tdl.generator;
 
 import java.awt.Graphics2D;
@@ -19,7 +14,7 @@ import my.tdl.main.Animator;
  *
  * @author Andre
  */
-public class Block extends Rectangle{
+public class BlockModel extends Rectangle{
     
     public Vector2F pos = new Vector2F();
     public static int BlockSize = 48; //tamanho do block na tela
@@ -32,13 +27,13 @@ public class Block extends Rectangle{
     private ArrayList<BufferedImage> listWallTorch;
     Animator ani_torch;
     
-    public Block(Vector2F pos) {
+    public BlockModel(Vector2F pos) {
         setBounds((int)pos.xpos, (int)pos.ypos, BlockSize, BlockSize);
         this.pos = pos;
         isAlive = true;
     }
     
-    public Block(Vector2F pos, BlockType blocktype){
+    public BlockModel(Vector2F pos, BlockType blocktype){
         setBounds((int)pos.xpos, (int)pos.ypos, BlockSize, BlockSize);
         this.pos = pos;
         isAlive = true;
@@ -48,7 +43,7 @@ public class Block extends Rectangle{
 
 
     //retorna se o bloco é solido ou não
-    public Block isSolid(boolean isSolid){
+    public BlockModel isSolid(boolean isSolid){
         this.isSolid = isSolid;
         return this;
     }
@@ -129,7 +124,7 @@ public class Block extends Rectangle{
             }
         }
     }
-    
+   
     public enum BlockType{ 
         //FLOORS
         STONE_1,
