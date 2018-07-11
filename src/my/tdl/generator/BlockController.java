@@ -3,9 +3,6 @@ package my.tdl.generator;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 import my.project.gop.main.Vector2F;
-import my.tdl.generator.BlockModel;
-import my.tdl.generator.BlockView;
-
 /**
  *
  * @author andremury
@@ -19,18 +16,20 @@ public class BlockController {
 
     public BlockController(){
         this.blockEnts = new CopyOnWriteArrayList<>();
+        this.blockModel = new ArrayList<>();
+
     }
         //View
     public void setBlockEnts(CopyOnWriteArrayList blockents) {
         this.blockEnts = blockents;
     }
 
-    public void addEntityToBlock(BlockView ent) {
-        this.blockEnts.add(ent);
+    public boolean addEntityToBlock(BlockView ent) {
+        return this.blockEnts.add(ent);
     }
 
-    public void removeEntityFromBlock(BlockView ent) {
-        this.blockEnts.remove(ent);
+    public boolean removeEntityFromBlock(BlockView ent) {
+        return this.blockEnts.remove(ent);
 
     }
 
@@ -42,6 +41,18 @@ public class BlockController {
         return this.blockEnts;
     }
 
+    public BlockView getBlockView() {
+        return blockView;
+    }
+
+    public boolean addBlockToModel(BlockModel block){
+        return this.blockModel.add(block);
+    }
+    
+    public boolean removeBlockFromModel(BlockModel block){
+        return this.blockModel.remove(block);
+    }
+    
     public boolean isEntEmpty() {
         return this.blockEnts.isEmpty();
     }
@@ -54,9 +65,12 @@ public class BlockController {
         return spawn;
     }
 
+    public ArrayList<BlockModel> getBlockModel() {
+        return blockModel;
+    }
+
     public void setSpawn(float yPos, float xPos) {
         spawn = new BlockModel(new Vector2F(xPos*getBlockSize(), yPos*getBlockSize()));
-
     }
 
     void clearSpawn() {
@@ -65,6 +79,14 @@ public class BlockController {
     
     public BlockModel newBlockModel(Vector2F pos, BlockModel.BlockType blocktype){
         return new BlockModel(pos, blocktype);
+    }
+
+    boolean isBlockModelEmpty() {
+        return this.blockModel.isEmpty();
+    }
+
+    void clearBlockModel() {
+        this.blockModel.clear();
     }
    
     
