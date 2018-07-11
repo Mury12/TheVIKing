@@ -124,7 +124,7 @@ public class BlockModel extends Rectangle{
             }
         }
     }
-    
+   
     public enum BlockType{ 
         //FLOORS
         STONE_1,
