@@ -20,7 +20,7 @@ public class World {
 
     private GameStateManager gsm;
     public Vector2F map_pos = new Vector2F();
-    public TileManager tiles;
+    public TileManagerController tiles;
     private static Player player;
     private String worldName;
     private BufferedImage map;
@@ -53,7 +53,7 @@ public class World {
     }
     
     public void init(){
-        tiles = new TileManager(this);
+        tiles.setTileModel(this);
         map_pos.xpos = bc.getSpawn().getBlockLocation().xpos - player.getPos().xpos + 10;
         map_pos.ypos = bc.getSpawn().getBlockLocation().ypos - player.getPos().ypos + 8;
         
@@ -82,36 +82,36 @@ public class World {
                     switch (col & 0xFFFFFF) { //0xFFFFFF é o código da cor utilizada para preencher com os tiles stone_1
                         //FLOORS
                         case 0x808080: //caso a cor seja...
-                            tiles.blocks.addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.STONE_1)); // *32 faz com que cada bloco seja exibido em 32x32 px
+                            tiles.getBlocksController().addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.STONE_1)); // *32 faz com que cada bloco seja exibido em 32x32 px
                             break;
                         case 0xFFFEB8:
-                            tiles.blocks.addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.SAND_1));
+                            tiles.getBlocksController().addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.SAND_1));
                             break;
                         case 0x828126:
-                            tiles.blocks.addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.DIRT_1));
+                            tiles.getBlocksController().addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.DIRT_1));
                             break;
                         case 0xd5c768:
-                            tiles.blocks.addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.WOOD_1));
+                            tiles.getBlocksController().addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.WOOD_1));
                             break;
                         case 0xaa9f54:
-                            tiles.blocks.addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.WOOD_2_V));
+                            tiles.getBlocksController().addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.WOOD_2_V));
                             break;
                         case 0x69c33c:
-                            tiles.blocks.addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.GRASS_1));
+                            tiles.getBlocksController().addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.GRASS_1));
                             break;
 
                         //WALLS
                         case 0x404040: //caso a cor seja...
-                            tiles.blocks.addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.WALL_1).isSolid(true)); // *32 faz com que cada bloco seja exibido em 32x32 px
+                            tiles.getBlocksController().addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.WALL_1).isSolid(true)); // *32 faz com que cada bloco seja exibido em 32x32 px
                             break;
                         case 0xFFFC00:
-                            tiles.blocks.addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.WALL_1_TORCH).isSolid(true));
+                            tiles.getBlocksController().addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.WALL_1_TORCH).isSolid(true));
                             break;
                         case 0xB8B8B8:
-                            tiles.blocks.addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.WALL_1_ROOF).isSolid(true));
+                            tiles.getBlocksController().addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.WALL_1_ROOF).isSolid(true));
                             break;
                         case 0xAEB459:
-                            tiles.blocks.addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.SPAWN_POS));
+                            tiles.getBlocksController().addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.SPAWN_POS));
                             break;
 
                     }
@@ -242,7 +242,7 @@ public class World {
         return spawnPos;
     }
 
-    public TileManager getTiles() {
+    public TileManagerController getTiles() {
         return tiles;
     }
 

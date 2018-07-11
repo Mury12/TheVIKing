@@ -50,7 +50,7 @@ public class Player implements KeyListener {
     private float speedRight = 0;
     private final float slowdown = 4.93F; //quanto de incremento para o ease-in-out
     private static char keyTyped;
-
+    private Check chk = new Check();
     private final BufferedImage msg_bgbody = loadImageFrom.LoadImageFrom(Main.class, "msg_bgbody.png");
     private final BufferedImage msg_bgtail = loadImageFrom.LoadImageFrom(Main.class, "msg_tailbg.png");
     private final BufferedImage msg_bgright = loadImageFrom.LoadImageFrom(Main.class, "msg_bgright.png");
@@ -266,7 +266,7 @@ public class Player implements KeyListener {
     //
 
     public void moveMapUp(float moveAmountu) {
-        if (!Check.CollisionPlayerBlock(
+        if (!chk.CollisionPlayerBlock(
                 new Point((int) (pos.xpos + world.map_pos.xpos),
                         (int) (pos.ypos + world.map_pos.ypos - moveAmountu)),
                 new Point((int) (pos.xpos + world.map_pos.xpos + width),
@@ -284,7 +284,7 @@ public class Player implements KeyListener {
     }
 
     public void moveMapUpGlide(float moveAmountu) {
-        if (!Check.CollisionPlayerBlock(
+        if (!chk.CollisionPlayerBlock(
                 new Point((int) (pos.xpos + world.map_pos.xpos),
                         (int) (pos.ypos + world.map_pos.ypos - moveAmountu)),
                 new Point((int) (pos.xpos + world.map_pos.xpos + width),
@@ -305,7 +305,7 @@ public class Player implements KeyListener {
     }
 
     public void moveMapDown(float moveAmountd) {
-        if (!Check.CollisionPlayerBlock(
+        if (!chk.CollisionPlayerBlock(
                 new Point((int) (pos.xpos + world.map_pos.xpos),
                         (int) (pos.ypos + world.map_pos.ypos + height + moveAmountd)),
                 new Point((int) (pos.xpos + world.map_pos.xpos + width),
@@ -323,8 +323,8 @@ public class Player implements KeyListener {
     }
 
     public void moveMapDownGlide(float moveAmountd) {
-        {
-            if (!Check.CollisionPlayerBlock(
+        
+            if (!chk.CollisionPlayerBlock(
                     new Point((int) (pos.xpos + world.map_pos.xpos),
                             (int) (pos.ypos + world.map_pos.ypos + height + moveAmountd)),
                     new Point((int) (pos.xpos + world.map_pos.xpos + width),
@@ -341,11 +341,11 @@ public class Player implements KeyListener {
             } else {
                 speedDown = 0;
             }
-        }
+        
     }
 
     public void moveMapLeft(float moveAmountl) {
-        if (!Check.CollisionPlayerBlock(
+        if (!chk.CollisionPlayerBlock(
                 new Point((int) (pos.xpos + world.map_pos.xpos - moveAmountl),
                         (int) (pos.ypos + world.map_pos.ypos)),
                 new Point((int) (pos.xpos + world.map_pos.xpos - moveAmountl),
@@ -363,7 +363,7 @@ public class Player implements KeyListener {
     }
 
     public void moveMapLeftGlide(float moveAmountl) {
-        if (!Check.CollisionPlayerBlock(
+        if (!chk.CollisionPlayerBlock(
                 new Point((int) (pos.xpos + world.map_pos.xpos - moveAmountl),
                         (int) (pos.ypos + world.map_pos.ypos)),
                 new Point((int) (pos.xpos + world.map_pos.xpos - moveAmountl),
@@ -383,7 +383,7 @@ public class Player implements KeyListener {
     }
 
     public void moveMapRight(float moveAmountr) {
-        if (!Check.CollisionPlayerBlock(
+        if (!chk.CollisionPlayerBlock(
                 new Point((int) (pos.xpos + world.map_pos.xpos + width + moveAmountr),
                         (int) (pos.ypos + world.map_pos.ypos)),
                 new Point((int) (pos.xpos + world.map_pos.xpos + width + moveAmountr),
@@ -401,7 +401,7 @@ public class Player implements KeyListener {
     }
 
     public void moveMapRightGlide(float moveAmountr) {
-        if (!Check.CollisionPlayerBlock(
+        if (!chk.CollisionPlayerBlock(
                 new Point((int) (pos.xpos + world.map_pos.xpos + width + moveAmountr),
                         (int) (pos.ypos + world.map_pos.ypos)),
                 new Point((int) (pos.xpos + world.map_pos.xpos + width + moveAmountr),
