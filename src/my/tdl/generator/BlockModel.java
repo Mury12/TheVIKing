@@ -106,10 +106,10 @@ public class BlockModel extends Rectangle{
     public void render(Graphics2D g){
         if(isAlive){
             if(block != null){
-            //g.drawRect((int)pos.getWorldLocation().xpos, (int)pos.getWorldLocation().ypos, BlockSize, BlockSize);
+//            g.drawRect((int)pos.getWorldLocation().xpos, (int)pos.getWorldLocation().ypos, BlockSize, BlockSize);
             g.drawImage(block, (int)pos.getWorldLocation().xpos, (int)pos.getWorldLocation().ypos, BlockSize, BlockSize, null);
             }else{
-                //g.fillRect((int)pos.getWorldLocation().xpos, (int)pos.getWorldLocation().ypos, width, height);
+//                g.fillRect((int)pos.getWorldLocation().xpos, (int)pos.getWorldLocation().ypos, width, height);
             }
         }else{
             if(!droped){
@@ -160,5 +160,10 @@ public class BlockModel extends Rectangle{
     public Vector2F getBlockLocation(){
         return pos;
     }
+
+    public String getBlocktype() {
+        return blocktype.toString();
+    }
+    
     
 }

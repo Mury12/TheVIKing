@@ -7,16 +7,16 @@ package my.tdl.main;
 
 import java.awt.Point;
 import my.tdl.generator.BlockModel;
-import my.tdl.generator.TileManager;
+import my.tdl.generator.TileManagerController;
 
 /**
  *
  * @author Andre
  */
 public class Check {
-    
-    public static boolean CollisionPlayerBlock(Point p1, Point p2){
-        for(BlockModel block : TileManager.blocks.getBlockModel()){
+    private TileManagerController tc = new TileManagerController();
+    public boolean CollisionPlayerBlock(Point p1, Point p2){
+        for(BlockModel block : tc.getBlocksController().getBlockModel()){
             if(block.isSolid()){
                 if(block.contains(p1) || block.contains(p2)){
                     return true;

@@ -12,7 +12,7 @@ public class BlockController {
     private CopyOnWriteArrayList<BlockView> blockEnts;
     private BlockModel spawn;
     private BlockView blockView;
-    private ArrayList<BlockModel> blockModel;
+    public  ArrayList<BlockModel> blockModel;
 
     public BlockController(){
         this.blockEnts = new CopyOnWriteArrayList<>();
@@ -30,7 +30,6 @@ public class BlockController {
 
     public boolean removeEntityFromBlock(BlockView ent) {
         return this.blockEnts.remove(ent);
-
     }
 
     public void clearBlockEntities(){
@@ -42,7 +41,7 @@ public class BlockController {
     }
 
     public BlockView getBlockView() {
-        return blockView;
+        return this.blockView;
     }
 
     public boolean addBlockToModel(BlockModel block){
@@ -66,7 +65,7 @@ public class BlockController {
     }
 
     public ArrayList<BlockModel> getBlockModel() {
-        return blockModel;
+        return this.blockModel;
     }
 
     public void setSpawn(float yPos, float xPos) {
