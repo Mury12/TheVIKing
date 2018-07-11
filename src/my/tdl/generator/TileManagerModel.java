@@ -5,6 +5,7 @@
  */
 package my.tdl.generator;
 
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 
 /**
@@ -29,16 +30,16 @@ public class TileManagerModel {
     }
 
     public void tick(double deltaTime) {
-        for (BlockModel block : blocks.getBlockModel()) {
+        for (BlockModel block : blocks.blockModel) {
             block.tick(deltaTime);
 
             if (world.getPlayer().render.intersects(block)) {
                 block.setAlive(true);
-                if (!loaded_blocks.getBlockModel().contains(block)) {
-                    loaded_blocks.addBlockToModel(block);
+                if (!loaded_blocks.blockModel.contains(block)) {
+                    loaded_blocks.blockModel.add(block);
                 }
             } else {
-                if (loaded_blocks.getBlockModel().contains(block)) {
+                if (loaded_blocks.blockModel.contains(block)) {
                     loaded_blocks.removeBlockFromModel(block);
                 }
                 block.setAlive(false);
@@ -61,6 +62,12 @@ public class TileManagerModel {
 
     void setWorld(World world) {
         this.world = world;
+    }
+
+    public void render(Graphics2D g) {
+        for (BlockModel block : blocks.blockModel) {
+            block.render(g);
+        }
     }
 
 }

@@ -20,7 +20,7 @@ public class World {
 
     private GameStateManager gsm;
     public Vector2F map_pos = new Vector2F();
-    public TileManagerController tiles = new TileManagerController();
+    public TileManagerController tiles;
     private static Player player;
     private String worldName;
     private BufferedImage map;
@@ -53,7 +53,7 @@ public class World {
     }
     
     public void init(){
-        tiles.setTileModel(this);
+        this.tiles = new TileManagerController(this);
         map_pos.xpos = bc.getSpawn().getBlockLocation().xpos - player.getPos().xpos + 10;
         map_pos.ypos = bc.getSpawn().getBlockLocation().ypos - player.getPos().ypos + 8;
         

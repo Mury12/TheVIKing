@@ -15,15 +15,12 @@ import java.util.ArrayList;
 public class TileManagerController {
 
     private TileManagerModel tileModel;
-    private TileManagerView tileView;
     
     public TileManagerController(){
         this.tileModel = new TileManagerModel();
-        this.tileView = new TileManagerView();
     }
     public TileManagerController(World world){
         this.tileModel = new TileManagerModel(world);
-        this.tileView = new TileManagerView();
     }
     
     public ArrayList<BlockModel> getBlocks() {
@@ -46,7 +43,7 @@ public class TileManagerController {
         this.tileModel.tick(deltaTime);
     }
     public void render(Graphics2D g){
-        this.tileView.render(g);
+        this.tileModel.render(g);
     }
     
 }
