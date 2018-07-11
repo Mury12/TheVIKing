@@ -20,7 +20,7 @@ public class World {
 
     private GameStateManager gsm;
     public Vector2F map_pos = new Vector2F();
-    public TileManagerController tiles;
+    public TileManagerController tiles = new TileManagerController();
     private static Player player;
     private String worldName;
     private BufferedImage map;

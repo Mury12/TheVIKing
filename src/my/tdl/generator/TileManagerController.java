@@ -17,6 +17,15 @@ public class TileManagerController {
     private TileManagerModel tileModel;
     private TileManagerView tileView;
     
+    public TileManagerController(){
+        this.tileModel = new TileManagerModel();
+        this.tileView = new TileManagerView();
+    }
+    public TileManagerController(World world){
+        this.tileModel = new TileManagerModel(world);
+        this.tileView = new TileManagerView();
+    }
+    
     public ArrayList<BlockModel> getBlocks() {
         return this.tileModel.getBlocks().getBlockModel();
     }

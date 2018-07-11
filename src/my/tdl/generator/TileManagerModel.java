@@ -12,48 +12,55 @@ import java.util.ArrayList;
  * @author andremury
  */
 public class TileManagerModel {
-    public BlockController blocks = new BlockController();
-    public BlockController loaded_blocks = new BlockController();
+
+    public BlockController blocks;
+    public BlockController loaded_blocks;
     private World world;
-    
-    public TileManagerModel(){
-        
+
+    public TileManagerModel() {
+        this.blocks = new BlockController();
+        this.loaded_blocks = new BlockController();
     }
-    
-    public TileManagerModel(World world){
+
+    public TileManagerModel(World world) {
+        this.blocks = new BlockController();
+        this.loaded_blocks = new BlockController();
         this.world = world;
     }
-    
+
     public void tick(double deltaTime) {
         for (BlockModel block : blocks.getBlockModel()) {
             block.tick(deltaTime);
 
             if (world.getPlayer().render.intersects(block)) {
                 block.setAlive(true);
-                    if(!loaded_blocks.getBlockModel().contains(block)){
-                        loaded_blocks.addBlockToModel(block);
-                    }
+                if (!loaded_blocks.getBlockModel().contains(block)) {
+                    loaded_blocks.addBlockToModel(block);
+                }
             } else {
                 if (loaded_blocks.getBlockModel().contains(block)) {
                     loaded_blocks.removeBlockFromModel(block);
                 }
                 block.setAlive(false);
             }
-            if(!world.getPlayer().isDebugging()){
-                if(!loaded_blocks.isBlockModelEmpty()){
+            if (!world.getPlayer().isDebugging()) {
+                if (!loaded_blocks.isBlockModelEmpty()) {
                     loaded_blocks.clearBlockModel();
                 }
             }
         }
     }
 
-    public  BlockController getBlocks() {
+    public BlockController getBlocks() {
         return this.blocks;
     }
 
-    public  BlockController getLoaded_blocks() {
+    public BlockController getLoaded_blocks() {
         return this.loaded_blocks;
     }
-    
-    
+
+    void setWorld(World world) {
+        this.world = world;
+    }
+
 }

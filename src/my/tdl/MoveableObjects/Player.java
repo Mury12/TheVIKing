@@ -258,9 +258,6 @@ public class Player implements KeyListener {
         if (stamina >= 50) {
             tired = false;
             setMsg(false, " ");
-            if (!isMsgSet()) {
-                System.out.println("Ready to Run!");
-            }
         }
     }
     //

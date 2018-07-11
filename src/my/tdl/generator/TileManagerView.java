@@ -13,10 +13,16 @@ import java.awt.Graphics2D;
  */
 public class TileManagerView {
 
-    private BlockController blocks;
+    private BlockController blocks = new BlockController();
 
-        public void render(Graphics2D g){
-        for(BlockModel block : blocks.getBlockModel()){
+    public void render(Graphics2D g) {
+        if (blocks.getBlockModel().isEmpty()) {
+            System.out.println("empty block model");
+        } else {
+            System.out.println("block model not empty");
+        }
+        for (BlockModel block : blocks.getBlockModel()) {
+
             block.render(g);
         }
     }

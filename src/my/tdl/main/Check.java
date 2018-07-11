@@ -14,7 +14,7 @@ import my.tdl.generator.TileManagerController;
  * @author Andre
  */
 public class Check {
-    private TileManagerController tc;
+    private TileManagerController tc = new TileManagerController();
     public boolean CollisionPlayerBlock(Point p1, Point p2){
         for(BlockModel block : tc.getBlocksController().getBlockModel()){
             if(block.isSolid()){
