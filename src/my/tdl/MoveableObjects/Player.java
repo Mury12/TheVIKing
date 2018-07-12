@@ -1,31 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package my.tdl.MoveableObjects;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Random;
 import my.project.gop.main.Vector2F;
 import my.project.gop.main.loadImageFrom;
 import my.tdl.gamestates.DungeonLevelLoader;
 import my.tdl.generator.ChatBox;
-import my.tdl.generator.MessageBaloon;
-import my.tdl.main.Animator;
-import my.tdl.main.Assets;
 import my.tdl.main.Check;
 import my.tdl.main.Main;
 import my.tdl.managers.GUImanager;
 import my.tdl.managers.HUDmanager;
-import my.tdl.managers.Mousemanager;
 import my.tdl.generator.World;
 
 /**
@@ -35,41 +24,24 @@ import my.tdl.generator.World;
 public class Player implements KeyListener {
 
     private World world;
-    Vector2F pos;
-    private final int scale = 2;
-    private final int width = 22;
-    private final int height = 22;
-    public static boolean up, down, left, right, running, duck;
     private static boolean debug = false;
-    private float maxSpeed = 4 * 32F;
-    private final float fixDt = 1F / 60F; //pixels por frames que ele andará
+
     //velocidade do jogador para os lados.
-    private float speedUp = 0;
-    private float speedDown = 0;
-    private float speedLeft = 0;
-    private float speedRight = 0;
-    private final float slowdown = 4.93F; //quanto de incremento para o ease-in-out
-    private static char keyTyped;
-    private Check chk = new Check();
+    private PlayerActions playerAct;
+    private PlayerAnimations playerAni;
+    public Check chk = new Check();
     private final BufferedImage msg_bgbody = loadImageFrom.LoadImageFrom(Main.class, "msg_bgbody.png");
     private final BufferedImage msg_bgtail = loadImageFrom.LoadImageFrom(Main.class, "msg_tailbg.png");
     private final BufferedImage msg_bgright = loadImageFrom.LoadImageFrom(Main.class, "msg_bgright.png");
 
-    public static boolean moving;
-    private static boolean spawned;
     public double stamina = 100;
     private int playerLevel = 1;
     private double lifePoints = 105;
 
     private boolean tired;
 
-    private static boolean chatBox = false;
-    public static boolean message_sent = false;
-    private static boolean typing = false;
-    private boolean isMsgSet = false;
-    private String msg = "";
 
-    Mousemanager playerMM = new Mousemanager();
+
 
     /*
      Rendering
@@ -78,8 +50,7 @@ public class Player implements KeyListener {
     private int renderDistanceH = 14;
     public static Rectangle render;
     //TODO
-    private int animationState = 0;
-    private int animationSpeed = 1000;
+
 
     /* 0 = up
      * 1 = down
@@ -88,27 +59,15 @@ public class Player implements KeyListener {
      * 4 = idel
      */
     //arrays contendo os sprites de animaçao
-    private ArrayList<BufferedImage> listUp;
-    Animator ani_up;
-    private ArrayList<BufferedImage> listDown;
-    Animator ani_down;
-    private ArrayList<BufferedImage> listLeft;
-    Animator ani_left;
-    private ArrayList<BufferedImage> listRight;
-    Animator ani_right;
-    private ArrayList<BufferedImage> listIdle;
-    Animator ani_idle;
-
     private HUDmanager hudm;
     private GUImanager guim;
     private PlayerActions playerActions;
-
+    
     public Player() {
         pos = new Vector2F(Main.width / 2 - width / 2, Main.height / 2 - height / 2); //define o player exatamente no meio da tela
     }
 
     public void init(World world) {
-        playerActions = new PlayerActions(world);
         hudm = new HUDmanager(world);
         guim = new GUImanager();
         this.world = world;
@@ -119,33 +78,9 @@ public class Player implements KeyListener {
                 renderDistanceW * 48,
                 renderDistanceH * 48);
 
-        animatePlayer();
-        //UP
-        ani_up = new Animator(listUp);
-        ani_up.setSpeed(animationSpeed); //velocidade da animação em ms
-        ani_up.play();
+        playerAni.animatePlayer();
+        playerAct.isSpawned();
 
-        //DOWN
-        ani_down = new Animator(listDown);
-        ani_down.setSpeed(animationSpeed);
-        ani_down.play();
-
-        //RIGHT
-        ani_right = new Animator(listRight);
-        ani_right.setSpeed(animationSpeed);
-        ani_right.play();
-
-        //LEFT
-        ani_left = new Animator(listLeft);
-        ani_left.setSpeed(animationSpeed);
-        ani_left.play();
-
-        //IDLE
-        ani_idle = new Animator(listIdle);
-        ani_idle.setSpeed(animationSpeed);
-        ani_idle.play();
-
-        spawned = true;
     }
 
     //O MÉTODO TICK É RESPONSÁVEL POR ATUALIZAR AS INFORMAÇÕES PROCESSADAS NO GAME
@@ -245,190 +180,6 @@ public class Player implements KeyListener {
     }
 
     //sistema de cansaço
-    public void drawStamina(double amount) {
-        if (stamina > 0) {
-            stamina -= amount;
-        }
-    }
-
-    public void recoverStamina(double amount) {
-        if (stamina < 100) {
-            stamina += amount;
-        }
-        if (stamina >= 50) {
-            tired = false;
-            setMsg(false, " ");
-        }
-    }
-    //
-
-    public void moveMapUp(float moveAmountu) {
-        if (!chk.CollisionPlayerBlock(
-                new Point((int) (pos.xpos + world.map_pos.xpos),
-                        (int) (pos.ypos + world.map_pos.ypos - moveAmountu)),
-                new Point((int) (pos.xpos + world.map_pos.xpos + width),
-                        (int) (pos.ypos + world.map_pos.ypos - moveAmountu))
-        )) {
-            if (speedUp < maxSpeed) {
-                speedUp += slowdown; //incrementa a velocidade pouco a pouco, para tornar um movimento de ease in-out suave
-            } else {
-                speedUp = maxSpeed;
-            }
-            world.map_pos.ypos -= moveAmountu;
-        } else {
-            speedUp = 0;
-        }
-    }
-
-    public void moveMapUpGlide(float moveAmountu) {
-        if (!chk.CollisionPlayerBlock(
-                new Point((int) (pos.xpos + world.map_pos.xpos),
-                        (int) (pos.ypos + world.map_pos.ypos - moveAmountu)),
-                new Point((int) (pos.xpos + world.map_pos.xpos + width),
-                        (int) (pos.ypos + world.map_pos.ypos - moveAmountu))
-        )) {
-            if (speedUp != 0) {
-                speedUp -= slowdown;
-
-                if (speedUp < 0) {
-                    speedUp = 0;
-                }
-            }
-            world.map_pos.ypos -= moveAmountu;
-        } else {
-            speedUp = 0;
-        }
-
-    }
-
-    public void moveMapDown(float moveAmountd) {
-        if (!chk.CollisionPlayerBlock(
-                new Point((int) (pos.xpos + world.map_pos.xpos),
-                        (int) (pos.ypos + world.map_pos.ypos + height + moveAmountd)),
-                new Point((int) (pos.xpos + world.map_pos.xpos + width),
-                        (int) (pos.ypos + world.map_pos.ypos + height + moveAmountd))
-        )) {
-            if (speedDown < maxSpeed) {
-                speedDown += slowdown;
-            } else {
-                speedDown = maxSpeed;
-            }
-            world.map_pos.ypos += moveAmountd;
-        } else {
-            speedDown = 0;
-        }
-    }
-
-    public void moveMapDownGlide(float moveAmountd) {
-        
-            if (!chk.CollisionPlayerBlock(
-                    new Point((int) (pos.xpos + world.map_pos.xpos),
-                            (int) (pos.ypos + world.map_pos.ypos + height + moveAmountd)),
-                    new Point((int) (pos.xpos + world.map_pos.xpos + width),
-                            (int) (pos.ypos + world.map_pos.ypos + height + moveAmountd))
-            )) {
-                if (speedDown != 0) {
-                    speedDown -= slowdown;
-
-                    if (speedDown < 0) {
-                        speedDown = 0;
-                    }
-                }
-                world.map_pos.ypos += moveAmountd;
-            } else {
-                speedDown = 0;
-            }
-        
-    }
-
-    public void moveMapLeft(float moveAmountl) {
-        if (!chk.CollisionPlayerBlock(
-                new Point((int) (pos.xpos + world.map_pos.xpos - moveAmountl),
-                        (int) (pos.ypos + world.map_pos.ypos)),
-                new Point((int) (pos.xpos + world.map_pos.xpos - moveAmountl),
-                        (int) (pos.ypos + world.map_pos.ypos))
-        )) {
-            if (speedLeft < maxSpeed) {
-                speedLeft += slowdown;
-            } else {
-                speedLeft = maxSpeed;
-            }
-            world.map_pos.xpos -= moveAmountl;
-        } else {
-            speedLeft = 0;
-        }
-    }
-
-    public void moveMapLeftGlide(float moveAmountl) {
-        if (!chk.CollisionPlayerBlock(
-                new Point((int) (pos.xpos + world.map_pos.xpos - moveAmountl),
-                        (int) (pos.ypos + world.map_pos.ypos)),
-                new Point((int) (pos.xpos + world.map_pos.xpos - moveAmountl),
-                        (int) (pos.ypos + world.map_pos.ypos + height))
-        )) {
-            if (speedLeft != 0) {
-                speedLeft -= slowdown;
-
-                if (speedLeft < 0) {
-                    speedLeft = 0;
-                }
-            }
-            world.map_pos.xpos -= moveAmountl;
-        } else {
-            speedLeft = 0;
-        }
-    }
-
-    public void moveMapRight(float moveAmountr) {
-        if (!chk.CollisionPlayerBlock(
-                new Point((int) (pos.xpos + world.map_pos.xpos + width + moveAmountr),
-                        (int) (pos.ypos + world.map_pos.ypos)),
-                new Point((int) (pos.xpos + world.map_pos.xpos + width + moveAmountr),
-                        (int) (pos.ypos + world.map_pos.ypos + height))
-        )) {
-            if (speedRight < maxSpeed) {
-                speedRight += slowdown;
-            } else {
-                speedRight = maxSpeed;
-            }
-            world.map_pos.xpos += moveAmountr;
-        } else {
-            speedRight = 0;
-        }
-    }
-
-    public void moveMapRightGlide(float moveAmountr) {
-        if (!chk.CollisionPlayerBlock(
-                new Point((int) (pos.xpos + world.map_pos.xpos + width + moveAmountr),
-                        (int) (pos.ypos + world.map_pos.ypos)),
-                new Point((int) (pos.xpos + world.map_pos.xpos + width + moveAmountr),
-                        (int) (pos.ypos + world.map_pos.ypos + height))
-        )) {
-            if (speedRight != 0) {
-                speedRight -= slowdown;
-
-                if (speedRight < 0) {
-                    speedRight = 0;
-                }
-            }
-            world.map_pos.xpos += moveAmountr;
-        } else {
-            speedRight = 0;
-        }
-    }
-
-    public void drawLifeBar(Graphics2D g) {
-        g.setColor(new Color((int) (getLifePoints() * (255 / getLifePoints())), (int) (getLifePoints() * (68 / getLifePoints())), (int) (getLifePoints() * (68 / getLifePoints()))));
-        g.fillRect(10, Main.height - 35, (int) (getLifePoints() * (100 / getLifePoints())), 30);
-        if (getLifePoints() > ((playerLevel + 1) * 100 / playerLevel + 5) / 2) {
-            g.setColor(Color.BLACK);
-        } else {
-            g.setColor(Color.WHITE);
-        }
-        g.drawString("" + (int) getLifePoints(), 129 / 2 - 3 * 4, Main.height - 17);
-        g.setColor(Color.WHITE);
-        g.drawRect(10, Main.height - 35, 100, 30);
-    }
 
     public String randomStaminAlert() {
         String msg = "Sorry, I can't do anything right now.";
@@ -450,62 +201,8 @@ public class Player implements KeyListener {
         return msg;
     }
 
-    public void drawStaminBar(Graphics2D g) {
 
-        g.setColor(new Color(255, (int) (getStamina() * 2.5), 0));
-        g.fillRect(115, Main.height - 35, (int) getStamina(), 30);
-        if (getStamina() > 50) {
-            g.setColor(Color.BLACK);
-        } else {
-            g.setColor(Color.WHITE);
-        }
-        g.drawString("" + (int) getStamina(), 168 - 3 * 4, Main.height - 17);
-
-        if (isTired()) {
-            if (getStamina() < 20) {
-                MessageBaloon.getFinalMessage(msg, g);
-            }
-        }
-        g.setColor(Color.WHITE);
-        g.drawRect(115, Main.height - 35, 100, 30);
-    }
-
-    public void drawAnimation(Graphics2D g) {
-        if (animationState == 0) {
-            g.drawImage(ani_up.sprite, (int) pos.xpos - width / 2, (int) pos.ypos - height, width * scale, height * scale, null);
-            if (up) {
-                ani_up.update(System.currentTimeMillis()); //atualiza o sprite constantemente para animar
-            }
-        }
-        //DOWN
-        if (animationState == 1) {
-            g.drawImage(ani_down.sprite, (int) pos.xpos - width / 2, (int) pos.ypos - height, width * scale, height * scale, null);
-            if (down) {
-                ani_down.update(System.currentTimeMillis()); //atualiza o sprite constantemente para animar
-            }
-        }
-        //RIGHT
-        if (animationState == 2) {
-            g.drawImage(ani_right.sprite, (int) pos.xpos - width / 2, (int) pos.ypos - height, width * scale, height * scale, null);
-            if (right) {
-                ani_right.update(System.currentTimeMillis()); //atualiza o sprite constantemente para animar
-            }
-        }
-        //LEFT
-        if (animationState == 3) {
-            g.drawImage(ani_left.sprite, (int) pos.xpos - width / 2, (int) pos.ypos - height, width * scale, height * scale, null);
-            if (left) {
-                ani_left.update(System.currentTimeMillis()); //atualiza o sprite constantemente para animar
-            }
-        }
-        //IDLE
-        if (animationState == 4) {
-            g.drawImage(ani_idle.sprite, (int) pos.xpos - width / 2, (int) pos.ypos - height, width * scale, height * scale, null);
-            if (!right && !left && !down && !up) {
-                ani_idle.update(System.currentTimeMillis());
-            }
-        }
-    }
+    
 
     /**
      * ***************************RENDE
@@ -533,7 +230,6 @@ public class Player implements KeyListener {
     /**
      * ***********************************************************
      */
-
     /**
      *
      * @param e
@@ -665,120 +361,8 @@ public class Player implements KeyListener {
         return pos;
     }
 
-    public float getMaxSpeed() {
-        return maxSpeed;
-    }
 
-    public float getSlowdown() {
-        return slowdown;
-    }
-
-    private void animatePlayer() {
-        listUp = new ArrayList<>();
-        listDown = new ArrayList<>();
-        listLeft = new ArrayList<>();
-        listRight = new ArrayList<>();
-        listIdle = new ArrayList<>();
-
-        listUp.add(Assets.player.getTile(0, 32, 16, 16));
-        listUp.add(Assets.player.getTile(0, 32, 16, 16));
-        listUp.add(Assets.player.getTile(0, 32, 16, 16));
-        listUp.add(Assets.player.getTile(0, 32, 16, 16));
-        listUp.add(Assets.player.getTile(0, 32, 16, 16));
-        listUp.add(Assets.player.getTile(0, 32, 16, 16));
-        listUp.add(Assets.player.getTile(0, 32, 16, 16));
-        listUp.add(Assets.player.getTile(0, 32, 16, 16));
-        listUp.add(Assets.player.getTile(16, 32, 16, 16));
-        listUp.add(Assets.player.getTile(16, 32, 16, 16));
-        listUp.add(Assets.player.getTile(16, 32, 16, 16));
-        listUp.add(Assets.player.getTile(16, 32, 16, 16));
-        listUp.add(Assets.player.getTile(16, 32, 16, 16));
-        listUp.add(Assets.player.getTile(16, 32, 16, 16));
-        listUp.add(Assets.player.getTile(16, 32, 16, 16));
-        listUp.add(Assets.player.getTile(16, 32, 16, 16));
-
-        listDown.add(Assets.player.getTile(0, 48, 16, 16));
-        listDown.add(Assets.player.getTile(0, 48, 16, 16));
-        listDown.add(Assets.player.getTile(0, 48, 16, 16));
-        listDown.add(Assets.player.getTile(0, 48, 16, 16));
-        listDown.add(Assets.player.getTile(0, 48, 16, 16));
-        listDown.add(Assets.player.getTile(0, 48, 16, 16));
-        listDown.add(Assets.player.getTile(0, 48, 16, 16));
-        listDown.add(Assets.player.getTile(0, 48, 16, 16));
-        listDown.add(Assets.player.getTile(16, 48, 16, 16));
-        listDown.add(Assets.player.getTile(16, 48, 16, 16));
-        listDown.add(Assets.player.getTile(16, 48, 16, 16));
-        listDown.add(Assets.player.getTile(16, 48, 16, 16));
-        listDown.add(Assets.player.getTile(16, 48, 16, 16));
-        listDown.add(Assets.player.getTile(16, 48, 16, 16));
-        listDown.add(Assets.player.getTile(16, 48, 16, 16));
-        listDown.add(Assets.player.getTile(16, 48, 16, 16));
-
-        listLeft.add(Assets.player.getTile(32, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(32, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(32, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(32, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(32, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(32, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(32, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(32, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(48, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(48, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(48, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(48, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(48, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(48, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(48, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(48, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(64, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(64, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(64, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(64, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(64, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(64, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(64, 48, 16, 16));
-        listLeft.add(Assets.player.getTile(64, 48, 16, 16));
-
-        listRight.add(Assets.player.getTile(32, 32, 16, 16));
-        listRight.add(Assets.player.getTile(32, 32, 16, 16));
-        listRight.add(Assets.player.getTile(32, 32, 16, 16));
-        listRight.add(Assets.player.getTile(32, 32, 16, 16));
-        listRight.add(Assets.player.getTile(32, 32, 16, 16));
-        listRight.add(Assets.player.getTile(32, 32, 16, 16));
-        listRight.add(Assets.player.getTile(32, 32, 16, 16));
-        listRight.add(Assets.player.getTile(32, 32, 16, 16));
-        listRight.add(Assets.player.getTile(48, 32, 16, 16));
-        listRight.add(Assets.player.getTile(48, 32, 16, 16));
-        listRight.add(Assets.player.getTile(48, 32, 16, 16));
-        listRight.add(Assets.player.getTile(48, 32, 16, 16));
-        listRight.add(Assets.player.getTile(48, 32, 16, 16));
-        listRight.add(Assets.player.getTile(48, 32, 16, 16));
-        listRight.add(Assets.player.getTile(48, 32, 16, 16));
-        listRight.add(Assets.player.getTile(48, 32, 16, 16));
-        listRight.add(Assets.player.getTile(64, 32, 16, 16));
-        listRight.add(Assets.player.getTile(64, 32, 16, 16));
-        listRight.add(Assets.player.getTile(64, 32, 16, 16));
-        listRight.add(Assets.player.getTile(64, 32, 16, 16));
-        listRight.add(Assets.player.getTile(64, 32, 16, 16));
-        listRight.add(Assets.player.getTile(64, 32, 16, 16));
-        listRight.add(Assets.player.getTile(64, 32, 16, 16));
-        listRight.add(Assets.player.getTile(64, 32, 16, 16));
-
-        listIdle.add(Assets.player.getTile(0, 16, 16, 16));
-        listIdle.add(Assets.player.getTile(16, 16, 16, 16));
-        listIdle.add(Assets.player.getTile(16, 16, 16, 16));
-        listIdle.add(Assets.player.getTile(16, 16, 16, 16));
-        listIdle.add(Assets.player.getTile(16 * 2, 16, 16, 16));
-        listIdle.add(Assets.player.getTile(16 * 2, 16, 16, 16));
-        listIdle.add(Assets.player.getTile(16 * 2, 16, 16, 16));
-        listIdle.add(Assets.player.getTile(16, 16, 16, 16));
-        listIdle.add(Assets.player.getTile(16, 16, 16, 16));
-        listIdle.add(Assets.player.getTile(16, 16, 16, 16));
-        for (int i = 0; i < 100; i++) {
-            listIdle.add(Assets.player.getTile(0, 16, 16, 16));
-        }
-    }
-
+    
     public void setSpawn(Vector2F pos) {
         this.pos.setWorldVariables(pos.getWorldLocation().xpos, pos.getWorldLocation().ypos);
     }
@@ -787,13 +371,6 @@ public class Player implements KeyListener {
         return debug;
     }
 
-    public boolean isMoving() {
-        return this.moving;
-    }
-
-    public boolean hasSpawned() {
-        return this.spawned;
-    }
 
     public double getStamina() {
         return this.stamina;
@@ -808,34 +385,13 @@ public class Player implements KeyListener {
         return this.tired;
     }
 
-    public void setMsg(boolean set, String msg) {
-        this.isMsgSet = set;
-        this.msg = msg;
-    }
 
-    public boolean isMsgSet() {
-        return this.isMsgSet;
-    }
 
     public PlayerActions getPlayerActions() {
-        return playerActions;
+        return playerAct;
     }
 
-    public float getSpeed() {
-        if (speedUp > 0) {
-            return this.speedUp;
-        }
-        if (speedDown > 0) {
-            return this.speedDown;
-        }
-        if (speedLeft > 0) {
-            return this.speedLeft;
-        }
-        if (speedRight > 0) {
-            return this.speedRight;
-        }
-        return 0;
-    }
+
 
     public int getPlayerLevel() {
         return playerLevel;
@@ -845,65 +401,19 @@ public class Player implements KeyListener {
         playerLevel = getPlayerLevel() + 1;
     }
 
-    private void sendMessage() {
-        this.message_sent = true;
-        reloadMessage();
+
+    void setTired(boolean b) {
+        this.tired = b;
     }
 
-    private void reloadMessage() {
-        this.message_sent = false;
-        this.typing = false;
+    public double getStamin() {
+        return this.stamina;
     }
 
-    private void resetChat() {
-        this.message_sent = false;
-        this.typing = false;
-        this.chatBox = false;
+    public void setStamin(double d) {
+        this.stamina = d;
     }
 
-    public static boolean isChatting() {
-        return chatBox;
-    }
 
-    public static boolean isTyping() {
-        return typing;
-    }
-
-    public static char getKeyTyped() {
-        return keyTyped;
-    }
-
-    public static void setCharTyped(char keyChar) {
-        keyTyped = keyChar;
-    }
-
-    public class PlayerActions {
-
-        private World world;
-
-        public PlayerActions(World world) {
-            this.world = world;
-        }
-
-        public void attackUp() {
-
-        }
-
-        public void attackDown() {
-
-        }
-
-        public void attackRight() {
-
-        }
-
-        public void attackLeft() {
-
-        }
-
-        public void run() {
-
-        }
-    }
 
 }

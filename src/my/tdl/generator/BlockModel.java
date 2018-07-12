@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import my.project.gop.main.Vector2F;
 import my.tdl.main.Assets;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import my.tdl.main.Animator;
 
@@ -14,8 +13,8 @@ import my.tdl.main.Animator;
  *
  * @author Andre
  */
-public class BlockModel extends Rectangle{
-    
+public class BlockModel extends Rectangle {
+
     public Vector2F pos = new Vector2F();
     public static int BlockSize = 48; //tamanho do block na tela
     private BlockType blocktype;
@@ -23,40 +22,60 @@ public class BlockModel extends Rectangle{
     private boolean isSolid;
     private boolean isAlive;
     private boolean droped = false;
-    
+
     private ArrayList<BufferedImage> listWallTorch;
     Animator ani_torch;
-    
+
     public BlockModel(Vector2F pos) {
-        setBounds((int)pos.xpos, (int)pos.ypos, BlockSize, BlockSize);
+        setBounds((int) pos.xpos, (int) pos.ypos, BlockSize, BlockSize);
         this.pos = pos;
         isAlive = true;
     }
-    
-    public BlockModel(Vector2F pos, BlockType blocktype){
-        setBounds((int)pos.xpos, (int)pos.ypos, BlockSize, BlockSize);
+
+    public BlockModel(Vector2F pos, BlockType blocktype) {
+        setBounds((int) pos.xpos, (int) pos.ypos, BlockSize, BlockSize);
         this.pos = pos;
         isAlive = true;
         this.blocktype = blocktype;
         init();
     }
 
-
     //retorna se o bloco é solido ou não
-    public BlockModel isSolid(boolean isSolid){
+    public BlockModel isSolid(boolean isSolid) {
         this.isSolid = isSolid;
         return this;
     }
-    public void init(){
+
+    public void init() {
         //Retorna os blocos contidos na spritesheet
-        switch(blocktype){
+        getBlockType();
+    }
+
+    public void tick(double deltaTime) {
+        if (isAlive) {
+            setBounds((int) pos.xpos, (int) pos.ypos, BlockSize, BlockSize);
+        }
+    }
+
+    public void render(Graphics2D g) {
+        if (isAlive) {
+            if (block != null) {
+                g.drawImage(block, (int) pos.getWorldLocation().xpos, (int) pos.getWorldLocation().ypos, BlockSize, BlockSize, null);
+            } else {
+                g.fillRect((int) pos.getWorldLocation().xpos, (int) pos.getWorldLocation().ypos, width, height);
+            }
+        }
+    }
+
+    private void getBlockType() {
+        switch (this.blocktype) {
             //FLOORS
-            case STONE_1: 
+            case STONE_1:
                 block = Assets.getStone_1();
                 break;
             case VOID_1:
-                 block = Assets.getVoid_1();
-                 break;
+                block = Assets.getVoid_1();
+                break;
             case SAND_1:
                 block = Assets.getSand_1();
                 break;
@@ -75,8 +94,8 @@ public class BlockModel extends Rectangle{
             case SPAWN_POS:
                 block = Assets.getSpawn_pos();
                 break;
-                
-                 //WALLS
+
+            //WALLS
             case WALL_1:
                 block = Assets.getWall_1();
                 break;
@@ -97,35 +116,8 @@ public class BlockModel extends Rectangle{
                 break;
         }
     }
-    
-    public void tick(double deltaTime){
-        if(isAlive)
-        setBounds((int)pos.xpos, (int)pos.ypos, BlockSize, BlockSize);
-    }
-    
-    public void render(Graphics2D g){
-        if(isAlive){
-            if(block != null){
-//            g.drawRect((int)pos.getWorldLocation().xpos, (int)pos.getWorldLocation().ypos, BlockSize, BlockSize);
-            g.drawImage(block, (int)pos.getWorldLocation().xpos, (int)pos.getWorldLocation().ypos, BlockSize, BlockSize, null);
-            }else{
-//                g.fillRect((int)pos.getWorldLocation().xpos, (int)pos.getWorldLocation().ypos, width, height);
-            }
-        }else{
-            if(!droped){
-                float xpos = pos.xpos + 24-12;
-                float ypos = pos.ypos + 24-12;
-                
-                Vector2F newpos = new Vector2F(xpos, ypos);
-                
-                //World.dropBlockEntity(newpos, block);
-                
-                droped = true;
-            }
-        }
-    }
-   
-    public enum BlockType{ 
+
+    public enum BlockType {
         //FLOORS
         STONE_1,
         SAND_1,
@@ -135,7 +127,6 @@ public class BlockModel extends Rectangle{
         WOOD_2_V,
         GRASS_1,
         SPAWN_POS,
-        
         //WALLS
         WALL_1,
         WALL_1_TORCH,
@@ -143,27 +134,27 @@ public class BlockModel extends Rectangle{
         WALL_1_WINDOW,
         WALL_1_WINE,
         WALL_1_ROOF,
-        
+
     }
+
     //define os blocks
     public boolean isSolid() {
         return isSolid;
     }
-    
+
     public boolean isAlive() {
         return isAlive;
     }
-    
-    public void setAlive(boolean isAlive){
+
+    public void setAlive(boolean isAlive) {
         this.isAlive = isAlive;
     }
-    public Vector2F getBlockLocation(){
+
+    public Vector2F getBlockLocation() {
         return pos;
     }
 
-    public String getBlocktype() {
+    public String getBlockTypeName() {
         return blocktype.toString();
     }
-    
-    
 }
