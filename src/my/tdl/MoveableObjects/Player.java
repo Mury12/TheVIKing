@@ -43,6 +43,7 @@ public class Player implements KeyListener {
     private HUDmanager hudm;
     private GUImanager guim;
     private final Vector2F pos;
+    private int kp;
 
     public Player() {
         pos = new Vector2F(Main.width / 2 - PlayerAnimations.width / 2, Main.height / 2 - PlayerAnimations.height / 2); //define o player exatamente no meio da tela
@@ -64,8 +65,7 @@ public class Player implements KeyListener {
         );
         
         playerAni.animatePlayer();
-        playerAct.isSpawned();
-
+        playerAct.spawn(true);
     }
 
     //O MÉTODO TICK É RESPONSÁVEL POR ATUALIZAR AS INFORMAÇÕES PROCESSADAS NO GAME
@@ -118,9 +118,14 @@ public class Player implements KeyListener {
 
     }
 
+    public int getKp() {
+        return kp;
+    }
+
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode(); //pega o código da tecla pressionada
+        System.out.println(key);
         if (key == KeyEvent.VK_UP) {
             if (!playerAct.isMoving()) {
                 playerAct.setMoving(true);
@@ -166,7 +171,7 @@ public class Player implements KeyListener {
                 }
             }
         }
-        playerAni.setPlayerFigure();
+        System.out.println("Up: "+playerAni.up);
     }
 
     @Override

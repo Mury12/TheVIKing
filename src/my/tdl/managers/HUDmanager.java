@@ -95,6 +95,7 @@ public class HUDmanager {
             g.drawString("MAXSpeed: "+world.getPlayer().getPlayerActions().getMaxSpeed(), 10, 49+13*2);
             g.drawString("Speed: "+(int)world.getPlayer().getPlayerActions().getSpeed(), 10, 49+13*3);
             g.drawString("Stamin: "+(int)world.getPlayer().getStamin(), 10, 49+13*4);
+            g.drawString("Key Pressed: "+(int)world.getPlayer().getKp(), 10, 49+13*5);
             
         }
         

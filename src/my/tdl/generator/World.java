@@ -246,7 +246,7 @@ public class World {
         return tiles;
     }
 
-    public static Player getPlayer() {
+    public Player getPlayer() {
         return player;
     }
     

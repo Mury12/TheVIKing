@@ -12,7 +12,7 @@ import my.tdl.managers.Mousemanager;
 public class PlayerActions {
 
     private final Player p;
-    private static boolean spawned;
+    private boolean spawned;
 
     public boolean moving;
     private float maxSpeed = 4 * 32F;
@@ -51,6 +51,8 @@ public class PlayerActions {
                 p.getPlayerAnimations().getRenderDistanceW() * 48,
                 p.getPlayerAnimations().getRenderDistanceH() * 48)
         );
+        p.getPlayerAnimations().setMoveAmounts();
+        p.getPlayerAnimations().setPlayerFigure();
     }
 
     public boolean isMoving() {
@@ -125,7 +127,9 @@ public class PlayerActions {
     public boolean isSpawned() {
         return this.spawned;
     }
-
+    public void spawn(boolean b){
+        this.spawned = b;
+    }
     public void attackUp() {
 
     }

@@ -29,7 +29,7 @@ public class PlayerAnimations {
     public static final int width = 22;
     public static final int height = 22;
     private Player p;
-    public boolean up, down, left, right, running, duck;
+    public static boolean up, down, left, right, running, duck;
 
     private final int renderDistanceW = 29;
     private final int renderDistanceH = 14;
@@ -58,20 +58,17 @@ public class PlayerAnimations {
 
     public PlayerAnimations(Player p) {
         this.p = p;
-        init();
     }
 
     public PlayerAnimations(Vector2F pos, World world, Player p) {
         this.pos = pos;
         this.p = p;
         this.world = world;
-        init();
     }
 
     public PlayerAnimations(Vector2F pos, Player p) {
         this.pos = pos;
         this.p = p;
-        init();
     }
 
     public int getRenderDistanceH() {
@@ -330,8 +327,9 @@ public class PlayerAnimations {
     }
     //
 
-    public void moveMapUp(float moveAmountu
-    ) {
+    public void moveMapUp(float moveAmountu) {
+        System.out.println("moveMapUp");
+
         if (!p.chk.CollisionPlayerBlock(
                 new Point((int) (pos.xpos + world.map_pos.xpos),
                         (int) (pos.ypos + world.map_pos.ypos - moveAmountu)),
@@ -353,8 +351,7 @@ public class PlayerAnimations {
         }
     }
 
-    public void moveMapUpGlide(float moveAmountu
-    ) {
+    public void moveMapUpGlide(float moveAmountu) {
         if (!p.chk.CollisionPlayerBlock(
                 new Point((int) (pos.xpos + world.map_pos.xpos),
                         (int) (pos.ypos + world.map_pos.ypos - moveAmountu)),
@@ -378,8 +375,9 @@ public class PlayerAnimations {
 
     }
 
-    public void moveMapDown(float moveAmountd
-    ) {
+    public void moveMapDown(float moveAmountd) {
+        System.out.println("moveMapDown");
+
         if (!p.chk
                 .CollisionPlayerBlock(
                         new Point((int) (pos.xpos + world.map_pos.xpos),
@@ -429,8 +427,9 @@ public class PlayerAnimations {
 
     }
 
-    public void moveMapLeft(float moveAmountl
-    ) {
+    public void moveMapLeft(float moveAmountl) {
+        System.out.println("moveMapLeft");
+
         if (!p.chk.CollisionPlayerBlock(
                 new Point((int) (pos.xpos + world.map_pos.xpos - moveAmountl),
                         (int) (pos.ypos + world.map_pos.ypos)),
@@ -476,8 +475,9 @@ public class PlayerAnimations {
         }
     }
 
-    public void moveMapRight(float moveAmountr
-    ) {
+    public void moveMapRight(float moveAmountr) {
+        System.out.println("moveMapRight");
+
         if (!p.chk.CollisionPlayerBlock(
                 new Point((int) (pos.xpos + world.map_pos.xpos + width + moveAmountr),
                         (int) (pos.ypos + world.map_pos.ypos)),
@@ -558,6 +558,7 @@ public class PlayerAnimations {
     }
 
     public void setPlayerFigure() {
+        System.out.println(up);
         if (up) {
             System.out.println("setPlayerFigure");
             moveMapUp(moveAmountu);
@@ -652,7 +653,7 @@ public class PlayerAnimations {
         }
     }
 
-    private void init() {
+    public void setMoveAmounts() {
         this.moveAmountu = (float) (this.p.getPlayerActions().getSpeed("up")
                 * p.getPlayerActions().fixDt);
         this.moveAmountd = (float) (p.getPlayerActions().getSpeed("down")
