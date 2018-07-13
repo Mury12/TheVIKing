@@ -171,7 +171,6 @@ public class Player implements KeyListener {
                 }
             }
         }
-        System.out.println("Up: "+playerAni.up);
     }
 
     @Override

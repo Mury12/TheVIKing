@@ -558,9 +558,7 @@ public class PlayerAnimations {
     }
 
     public void setPlayerFigure() {
-        System.out.println(up);
         if (up) {
-            System.out.println("setPlayerFigure");
             moveMapUp(moveAmountu);
             animationState = 0;
 
