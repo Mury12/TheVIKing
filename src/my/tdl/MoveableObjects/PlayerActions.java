@@ -1,5 +1,7 @@
 package my.tdl.MoveableObjects;
 
+import java.awt.Rectangle;
+import my.project.gop.main.Vector2F;
 import my.tdl.generator.World;
 import my.tdl.managers.Mousemanager;
 
@@ -9,25 +11,47 @@ import my.tdl.managers.Mousemanager;
  */
 public class PlayerActions {
 
+    private final Player p;
     private static boolean spawned;
 
-    public static boolean moving;
+    public boolean moving;
     private float maxSpeed = 4 * 32F;
-    private float speedUp = 0;
-    private float speedDown = 0;
-    private float speedLeft = 0;
-    private float speedRight = 0;
-    private final float slowdown = 4.93F; //quanto de incremento para o ease-in-out
-    private final float fixDt = 1F / 60F; //pixels por frames que ele andará
+    public float speedUp = 0;
+    public float speedDown = 0;
+    public float speedLeft = 0;
+    public float speedRight = 0;
+    private float slowdown = 4.93F; //quanto de incremento para o ease-in-out
+    public final float fixDt = 1F / 60F; //pixels por frames que ele andará
 
     Mousemanager playerMM = new Mousemanager();
 
-    private static char keyTyped;
-    private static boolean chatBox = false;
-    public static boolean message_sent = false;
-    private static boolean typing = false;
+    private char keyTyped;
+    public boolean chatBox = false;
+    public boolean message_sent = false;
+    public boolean typing = false;
     private boolean isMsgSet = false;
     private String msg = "";
+    private Vector2F pos;
+
+    public PlayerActions(Vector2F pos, Player p) {
+        this.pos = pos;
+        this.p = p;
+    }
+
+    public void tick(double deltaTime) {
+
+        playerMM.tick();
+
+        //realiza a renderização em tempo real apenas dos bloccks no campo
+        p.getPlayerAnimations().setRender(new Rectangle(
+                (int) (pos.xpos - pos.getWorldLocation().xpos
+                - p.getPlayerAnimations().getRenderDistanceW() / 2 + p.getPlayerAnimations().getWidth() / 2),
+                (int) (pos.ypos - pos.getWorldLocation().ypos
+                - p.getPlayerAnimations().getRenderDistanceH() / 2 + p.getPlayerAnimations().getHeight() / 2),
+                p.getPlayerAnimations().getRenderDistanceW() * 48,
+                p.getPlayerAnimations().getRenderDistanceH() * 48)
+        );
+    }
 
     public boolean isMoving() {
         return this.moving;
@@ -53,8 +77,26 @@ public class PlayerActions {
         return 0;
     }
 
+    public void setSpeed(String dir, float spd) {
+        switch (dir.toLowerCase()) {
+            case "up":
+                this.speedUp = spd;
+                break;
+            case "down":
+                this.speedDown = spd;
+                break;
+            case "left":
+                this.speedLeft = spd;
+                break;
+            case "right":
+                this.speedRight = spd;
+                break;
+            default:
+        }
+    }
+
     public float getSpeed(String direction) {
-        float speed = this.speedUp;
+        float speed = 0;
         switch (direction.toLowerCase()) {
             case "up":
                 speed = this.speedUp;
@@ -70,6 +112,10 @@ public class PlayerActions {
 
     public float getMaxSpeed() {
         return maxSpeed;
+    }
+
+    public void setMaxSpeed(float maxSpeed) {
+        this.maxSpeed = maxSpeed;
     }
 
     public float getSlowdown() {
@@ -115,7 +161,7 @@ public class PlayerActions {
         this.typing = false;
     }
 
-    private void resetChat() {
+    void resetChat() {
         this.message_sent = false;
         this.typing = false;
         this.chatBox = false;
@@ -125,19 +171,19 @@ public class PlayerActions {
         return this.isMsgSet;
     }
 
-    public static boolean isChatting() {
+    public boolean isChatting() {
         return chatBox;
     }
 
-    public static boolean isTyping() {
+    public boolean isTyping() {
         return typing;
     }
 
-    public static char getKeyTyped() {
+    public char getKeyTyped() {
         return keyTyped;
     }
 
-    public static void setCharTyped(char keyChar) {
+    public void setCharTyped(char keyChar) {
         keyTyped = keyChar;
     }
 
@@ -145,8 +191,8 @@ public class PlayerActions {
         return this.msg;
     }
 
-    void setSpeed(String up, float f) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    void setMoving(boolean b) {
+        this.moving = b;
     }
 
 }

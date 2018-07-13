@@ -21,7 +21,7 @@ public class World {
     private GameStateManager gsm;
     public Vector2F map_pos = new Vector2F();
     public TileManagerController tiles;
-    private static Player player;
+    private static Player player = new Player();
     private String worldName;
     private BufferedImage map;
     private int world_width;
@@ -127,7 +127,7 @@ public class World {
     }
     
     public void tick(double deltaTime) {
-        if(player.hasSpawned()){
+        if(player.getPlayerActions().hasSpawned()){
             Vector2F.setWorldVariables(map_pos.xpos, map_pos.ypos);
         }else{
             bc.getSpawn().tick(deltaTime);
@@ -136,7 +136,7 @@ public class World {
         
         if (!bc.getBlockEnts().isEmpty()) {
             for (BlockView ent : bc.getBlockEnts()) {
-                if (player.render.intersects(ent)) {
+                if (player.getPlayerAnimations().getRender().intersects(ent)) {
                     ent.tick(deltaTime);
                     ent.setAlive(true);
                 } else {
@@ -145,7 +145,7 @@ public class World {
             }
         }
         if(player != null)
-        player.tick(deltaTime);
+        player.getPlayerActions().tick(deltaTime);
     }
     
     public void dropBlockEntity(Vector2F pos, BufferedImage block_image){
@@ -182,13 +182,13 @@ public class World {
     //renderiza o mapa a partir do TileManager
     public void render(Graphics2D g) {
         tiles.render(g);
-        if(!player.hasSpawned()){
+        if(!player.getPlayerActions().hasSpawned()){
             bc.getSpawn().render(g);
         }
         ///descarrega os blocos que não estão na tela
         if(!bc.isEntEmpty()){ //só renderiza se não estiver vazio, diminuindo o lag
             for(BlockView ent : bc.getBlockEnts()){
-                if(player.render.intersects(ent))
+                if(player.getPlayerAnimations().render.intersects(ent))
                     ent.render(g);
             }
         }
@@ -197,7 +197,7 @@ public class World {
         if(mob != null)
             mob.render(g);
         
-        if(Player.isDebugging()){
+        if(player.isDebugging()){
             String str = "BlockEnt";
             g.drawString("BlockEnt:  "+bc.getBlockEnts().size(), Main.width - (str.length()+5)*8, 10);
             g.drawString("FPS:  "+(int)fps.getFps(), Main.width - (str.length()+5)*8, 23);

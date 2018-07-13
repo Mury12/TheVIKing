@@ -92,9 +92,9 @@ public class HUDmanager {
             g.drawString("MapYpos:  "+(int)world.getWorldPos().ypos, 10, 36);
             g.drawString("WBlocks:  "+world.getTiles().getBlocks().size(), 10, 49);
             g.drawString("CWBlocks:  "+world.getTiles().getLoaded_blocks().size(), 10, 49+13);
-            g.drawString("MAXSpeed: "+world.getPlayer().getMaxSpeed(), 10, 49+13*2);
-            g.drawString("Speed: "+(int)world.getPlayer().getSpeed(), 10, 49+13*3);
-            g.drawString("Stamin: "+(int)world.getPlayer().getStamina(), 10, 49+13*4);
+            g.drawString("MAXSpeed: "+world.getPlayer().getPlayerActions().getMaxSpeed(), 10, 49+13*2);
+            g.drawString("Speed: "+(int)world.getPlayer().getPlayerActions().getSpeed(), 10, 49+13*3);
+            g.drawString("Stamin: "+(int)world.getPlayer().getStamin(), 10, 49+13*4);
             
         }
         

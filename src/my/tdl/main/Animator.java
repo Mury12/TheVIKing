@@ -13,20 +13,18 @@ import java.util.ArrayList;
  * @author Andre
  */
 public class Animator {
-    
+
     private ArrayList<BufferedImage> frames;
     private volatile boolean running = false;
     public BufferedImage sprite;
     private long prevTime, speed;
     private int frameatPause, currentFrame;
-    
-    
-    
-    public Animator(ArrayList<BufferedImage> frames){
+
+    public Animator(ArrayList<BufferedImage> frames) {
         this.frames = frames;
     }
-    
-    public void setSpeed(long speed){
+
+    public void setSpeed(long speed) {
         this.speed = speed;
     }
 
@@ -43,37 +41,39 @@ public class Animator {
             }
         }
     }
-    
-    public void play(){
+
+    public void play() {
         running = true;
         prevTime = 0;
         frameatPause = 0;
         currentFrame = 0;
     }
-    
-    public void stop(){
+
+    public void stop() {
         running = false;
         prevTime = 0;
         frameatPause = 0;
         currentFrame = 0;
     }
-    
-    public void pause(){
+
+    public void pause() {
         frameatPause = currentFrame;
         running = false;
     }
-    
-    public void resume(){
+
+    public void resume() {
         currentFrame = frameatPause;
     }
-    
-    public void reset(){
+
+    public void reset() {
         currentFrame = 0;
     }
-    
-    public boolean isDoneAnimating(){
-        if(currentFrame == frames.size()){
+
+    public boolean isDoneAnimating() {
+        if (currentFrame == frames.size()) {
             return true;
-        }else return false;
+        } else {
+            return false;
+        }
     }
 }

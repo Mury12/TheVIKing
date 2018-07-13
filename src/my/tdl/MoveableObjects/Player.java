@@ -29,7 +29,6 @@ public class Player implements KeyListener {
     //velocidade do jogador para os lados.
     private PlayerActions playerAct;
     private PlayerAnimations playerAni;
-    public Check chk = new Check();
     private final BufferedImage msg_bgbody = loadImageFrom.LoadImageFrom(Main.class, "msg_bgbody.png");
     private final BufferedImage msg_bgtail = loadImageFrom.LoadImageFrom(Main.class, "msg_tailbg.png");
     private final BufferedImage msg_bgright = loadImageFrom.LoadImageFrom(Main.class, "msg_bgright.png");
@@ -38,149 +37,39 @@ public class Player implements KeyListener {
     private int playerLevel = 1;
     private double lifePoints = 105;
 
+    public Check chk = new Check();
     private boolean tired;
 
-
-
-
-    /*
-     Rendering
-     */
-    private int renderDistanceW = 29;
-    private int renderDistanceH = 14;
-    public static Rectangle render;
-    //TODO
-
-
-    /* 0 = up
-     * 1 = down
-     * 2 = right
-     * 3 = left
-     * 4 = idel
-     */
-    //arrays contendo os sprites de animaçao
     private HUDmanager hudm;
     private GUImanager guim;
-    private PlayerActions playerActions;
-    
+    private final Vector2F pos;
+
     public Player() {
-        pos = new Vector2F(Main.width / 2 - width / 2, Main.height / 2 - height / 2); //define o player exatamente no meio da tela
+        pos = new Vector2F(Main.width / 2 - PlayerAnimations.width / 2, Main.height / 2 - PlayerAnimations.height / 2); //define o player exatamente no meio da tela
+        playerAct = new PlayerActions(pos, this);
+        playerAni = new PlayerAnimations(pos, this);
     }
 
     public void init(World world) {
         hudm = new HUDmanager(world);
-        guim = new GUImanager();
+        guim = new GUImanager(this);
         this.world = world;
+        playerAni.setWorld(world);
         //inicia a renderização 
-        render = new Rectangle(
-                (int) (pos.xpos - pos.getWorldLocation().xpos + pos.xpos - renderDistanceW / 2 + width / 2),
-                (int) (pos.ypos - pos.getWorldLocation().ypos + pos.ypos - renderDistanceH / 2 + height / 2),
-                renderDistanceW * 48,
-                renderDistanceH * 48);
-
+        playerAni.setRender(new Rectangle(
+                (int) (playerAni.pos.xpos - playerAni.pos.getWorldLocation().xpos + playerAni.pos.xpos - playerAni.getRenderDistanceW() / 2 + playerAni.getWidth() / 2),
+                (int) (playerAni.pos.ypos - playerAni.pos.getWorldLocation().ypos + playerAni.pos.ypos - playerAni.getRenderDistanceH() / 2 + playerAni.getHeight() / 2),
+                playerAni.getRenderDistanceW() * 48,
+                playerAni.getRenderDistanceH() * 48)
+        );
+        
         playerAni.animatePlayer();
         playerAct.isSpawned();
 
     }
 
     //O MÉTODO TICK É RESPONSÁVEL POR ATUALIZAR AS INFORMAÇÕES PROCESSADAS NO GAME
-    public void tick(double deltaTime) {
-
-        playerMM.tick();
-
-        //realiza a renderização em tempo real apenas dos bloccks no campo
-        render = new Rectangle(
-                (int) (pos.xpos - pos.getWorldLocation().xpos - renderDistanceW / 2 + width / 2),
-                (int) (pos.ypos - pos.getWorldLocation().ypos - renderDistanceH / 2 + height / 2),
-                renderDistanceW * 48,
-                renderDistanceH * 48);
-
-        float moveAmountu = (float) (speedUp * fixDt);
-        float moveAmountd = (float) (speedDown * fixDt);
-        float moveAmountl = (float) (speedLeft * fixDt);
-        float moveAmountr = (float) (speedRight * fixDt);
-
-        //CHECA COLISÃO DO MAPA COM O PLAYER
-        if (up) {
-            moveMapUp(moveAmountu);
-            animationState = 0;
-        } else {
-            moveMapUpGlide(moveAmountu);
-        }
-        if (down) {
-            moveMapDown(moveAmountd);
-            animationState = 1;
-        } else {
-            moveMapDownGlide(moveAmountd);
-        }
-        if (left) {
-            moveMapLeft(moveAmountl);
-            animationState = 3;
-        } else {
-            moveMapLeftGlide(moveAmountl);
-        }
-        if (right) {
-            moveMapRight(moveAmountr);
-            animationState = 2;
-        } else {
-            moveMapRightGlide(moveAmountr);
-        }
-        if (!up && !down && !right && !left || (((left && right) || (up && down)) && (!up || !down))) {
-            /*
-             *Standing Still
-             */
-            if (isMoving()) {
-                moving = false;
-            }
-            animationState = 4;
-        }
-
-        if (running && stamina > 0 && !tired) {
-            if (getStamina() <= 1) {
-                setPlayerLevel(1);
-                tired = true;
-                setMsg(true, randomStaminAlert());
-                System.out.println("You are tired, cant run now!");
-            }
-            if (animationSpeed != 500) {
-                animationSpeed = 500;
-                ani_left.setSpeed(animationSpeed);
-                ani_right.setSpeed(animationSpeed);
-                ani_down.setSpeed(animationSpeed);
-                ani_up.setSpeed(animationSpeed);
-                maxSpeed += 64;
-            }
-            if (moving && !tired) {
-                if (duck && running) {
-                    maxSpeed = 4 * 32 + 64;
-                }
-                drawStamina(0.5);
-            } else {
-                recoverStamina(0.05);
-                maxSpeed = 4 * 32;
-            }
-        } else {
-            if (duck && tired) {
-                maxSpeed -= maxSpeed - 10;
-                recoverStamina(0.1);
-            } else {
-                if (animationSpeed != 1000) {
-                    animationSpeed = 1000;
-                    ani_left.setSpeed(animationSpeed);
-                    ani_right.setSpeed(animationSpeed);
-                    ani_down.setSpeed(animationSpeed);
-                    ani_up.setSpeed(animationSpeed);
-                }
-                if (!duck && !running) {
-                    maxSpeed = 4 * 32F;
-                }
-                recoverStamina(0.05);
-            }
-        }
-    }
-
     //sistema de cansaço
-
     public String randomStaminAlert() {
         String msg = "Sorry, I can't do anything right now.";
         Random rand = new Random();
@@ -201,9 +90,6 @@ public class Player implements KeyListener {
         return msg;
     }
 
-
-    
-
     /**
      * ***************************RENDE
      *
@@ -215,25 +101,18 @@ public class Player implements KeyListener {
 
         //g.clipRect(0, 0,Main.width, Main.height);
         //UP
-        drawAnimation(g);
         //Representação da área de renderização efetiva. //drawRect(posicao do eixo X na tela, posicao eixo Y na tela, largura, altura)
         //g.drawRect((int)pos.xpos - renderDistanceW*32/2 + width / 2, (int)pos.ypos - renderDistanceH*32 / 2 + height / 2, renderDistanceW * 32, renderDistanceH * 32);
+        playerAni.drawAnimation(g);
         hudm.render(g);
-        drawLifeBar(g);
-        drawStaminBar(g);
+        playerAni.drawLifeBar(g);
+        playerAni.drawStaminBar(g);
         g.setColor(Color.WHITE);
         g.drawString("Level: " + getPlayerLevel(), 11, Main.height - 40);
         guim.render(g);
-        playerMM.render(g);
+        playerAct.playerMM.render(g);
     }
 
-    /**
-     * ***********************************************************
-     */
-    /**
-     *
-     * @param e
-     */
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -242,40 +121,39 @@ public class Player implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode(); //pega o código da tecla pressionada
-
         if (key == KeyEvent.VK_UP) {
-            if (!isMoving()) {
-                moving = true;
+            if (!playerAct.isMoving()) {
+                playerAct.setMoving(true);
             }
-            up = true;
+            playerAni.up = true;
         }
         if (key == KeyEvent.VK_DOWN) {
-            if (!isMoving()) {
-                moving = true;
+            if (!playerAct.isMoving()) {
+                playerAct.moving = true;
             }
-            down = true;
+            playerAni.down = true;
         }
         if (key == KeyEvent.VK_LEFT) {
-            if (!isMoving()) {
-                moving = true;
+            if (!playerAct.isMoving()) {
+                playerAct.moving = true;
             }
-            left = true;
+            playerAni.left = true;
         }
         if (key == KeyEvent.VK_RIGHT) {
-            if (!isMoving()) {
-                moving = true;
+            if (!playerAct.isMoving()) {
+                playerAct.moving = true;
             }
-            right = true;
+            playerAni.right = true;
         }
         if (key == KeyEvent.VK_SHIFT) {
-            running = true;
+            playerAni.running = true;
         }
         if (key == KeyEvent.VK_CONTROL) {
-            duck = true;
+            playerAni.duck = true;
         }
 
-        if (isChatting()) {
-            if (isTyping()) {
+        if (playerAct.isChatting()) {
+            if (playerAct.isTyping()) {
                 if (key == 8) {
                     ChatBox.backspace = true;
                 }
@@ -283,11 +161,12 @@ public class Player implements KeyListener {
                     if (key != KeyEvent.VK_UP && key != KeyEvent.VK_DOWN && key != KeyEvent.VK_LEFT && key != KeyEvent.VK_RIGHT) {
                         ChatBox.typed = true;
                     }
-                    setCharTyped(e.getKeyChar());
+                    playerAct.setCharTyped(e.getKeyChar());
                     ChatBox.space = (key == 32);
                 }
             }
         }
+        playerAni.setPlayerFigure();
     }
 
     @Override
@@ -295,22 +174,22 @@ public class Player implements KeyListener {
         int key = e.getKeyCode();
 
         if (key == KeyEvent.VK_UP) {
-            up = false;
+            playerAni.up = false;
         }
         if (key == KeyEvent.VK_DOWN) {
-            down = false;
+            playerAni.down = false;
         }
         if (key == KeyEvent.VK_LEFT) {
-            left = false;
+            playerAni.left = false;
         }
         if (key == KeyEvent.VK_RIGHT) {
-            right = false;
+            playerAni.right = false;
         }
         if (key == KeyEvent.VK_SHIFT) {
-            running = false;
+            playerAni.running = false;
         }
         if (key == KeyEvent.VK_CONTROL) {
-            duck = false;
+            playerAni.duck = false;
         }
         if (key == KeyEvent.VK_ESCAPE) {
             System.exit(1);
@@ -326,12 +205,12 @@ public class Player implements KeyListener {
             DungeonLevelLoader.world.changeLevel("World", "Map2");
         }
         if (key == KeyEvent.VK_ENTER) {
-            if (!isChatting()) {
-                chatBox = true;
+            if (!playerAct.isChatting()) {
+                playerAct.chatBox = true;
                 System.out.println("Chat opened.");
             } else {
-                if (isTyping()) {
-                    message_sent = true;
+                if (playerAct.isTyping()) {
+                    playerAct.message_sent = true;
                     ChatBox._message = ChatBox.message;
                     if (!ChatBox.chatLog.contains(ChatBox.message)) {
                         if (ChatBox.chatLog.size() * 13.5 >= Main.height / 3 - 33) {
@@ -341,16 +220,16 @@ public class Player implements KeyListener {
                     }
                     System.out.println("Message sent.");
                 } else {
-                    if (isChatting() && !isTyping()) {
-                        typing = true;
+                    if (playerAct.isChatting() && !playerAct.isTyping()) {
+                        playerAct.typing = true;
                         System.out.println("Ready to type");
                     }
                 }
             }
         }
         if (key == KeyEvent.VK_F2) {
-            if (isChatting()) {
-                resetChat();
+            if (playerAct.isChatting()) {
+                playerAct.resetChat();
                 System.out.println("Chat closed.");
             }
         }
@@ -361,19 +240,12 @@ public class Player implements KeyListener {
         return pos;
     }
 
-
-    
     public void setSpawn(Vector2F pos) {
         this.pos.setWorldVariables(pos.getWorldLocation().xpos, pos.getWorldLocation().ypos);
     }
 
-    public static boolean isDebugging() {
+    public boolean isDebugging() {
         return debug;
-    }
-
-
-    public double getStamina() {
-        return this.stamina;
     }
 
     public double getLifePoints() {
@@ -385,13 +257,13 @@ public class Player implements KeyListener {
         return this.tired;
     }
 
-
-
     public PlayerActions getPlayerActions() {
         return playerAct;
     }
 
-
+    public PlayerAnimations getPlayerAnimations() {
+        return playerAni;
+    }
 
     public int getPlayerLevel() {
         return playerLevel;
@@ -400,7 +272,6 @@ public class Player implements KeyListener {
     public void setPlayerLevel(int plus) {
         playerLevel = getPlayerLevel() + 1;
     }
-
 
     void setTired(boolean b) {
         this.tired = b;
@@ -413,7 +284,5 @@ public class Player implements KeyListener {
     public void setStamin(double d) {
         this.stamina = d;
     }
-
-
 
 }

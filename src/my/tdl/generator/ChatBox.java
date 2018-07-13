@@ -12,6 +12,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import my.tdl.MoveableObjects.Player;
+import my.tdl.MoveableObjects.PlayerActions;
 import my.tdl.main.Main;
 
 /**
@@ -31,8 +32,9 @@ public class ChatBox {
     public static double lastTimer;
     public static ArrayList<String> chatLog = new ArrayList<>();
     static Font font = new Font("Arial", 10, 13);
+    private static PlayerActions p;
     
-    public static void drawChatBox(Graphics2D g){
+    public static void drawChatBox(Graphics2D g, PlayerActions player){
         g.drawRect(10, (int)(Main.height-Main.height*1.5/3 -1), Main.width/4, Main.height/3);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
         g.fillRect(10, (int)(Main.height-Main.height*1.5/3 -1), Main.width/4, Main.height/3);
@@ -40,6 +42,7 @@ public class ChatBox {
         g.fillRect(10, (int)(Main.height-Main.height/6 - 21), Main.width/4, 20);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
         g1 = g;
+        p = player;
     }
     
     public static void writeMessage(char key){
@@ -61,7 +64,7 @@ public class ChatBox {
                 message = message;
             }
         }
-        if(!Player.message_sent && message.length()>1){
+        if(!p.message_sent && message.length()>1){
             g1.setColor(Color.BLACK);
             g1.setFont(font);
             g1.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
@@ -81,7 +84,7 @@ public class ChatBox {
             if(lastTimer >= 200){
                 clearBaloonString();
                 clearChatString();
-                Player.message_sent = false;
+                p.message_sent = false;
             lastTimer = 0;
             }
         }

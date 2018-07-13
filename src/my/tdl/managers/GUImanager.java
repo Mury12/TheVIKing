@@ -19,17 +19,17 @@ import sun.font.FontDesignMetrics;
  */
 public class GUImanager {
 
-    
-    public GUImanager(){
-        
+    private Player p;
+    public GUImanager(Player p){
+        this.p = p;
     }
     
     public void render(Graphics2D g){
-        if(Player.isChatting()){
-            ChatBox.drawChatBox(g);
-            if(Player.isTyping()){
-                    ChatBox.writeMessage(Player.getKeyTyped());
-                if(Player.message_sent){
+        if(p.getPlayerActions().isChatting()){
+            ChatBox.drawChatBox(g, p.getPlayerActions());
+            if(p.getPlayerActions().isTyping()){
+                    ChatBox.writeMessage(p.getPlayerActions().getKeyTyped());
+                if(p.getPlayerActions().message_sent){
                     ChatBox.sendMessage();
                     ChatBox.lastTimer++;
                 }

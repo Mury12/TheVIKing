@@ -33,7 +33,7 @@ public class TileManagerModel {
         for (BlockModel block : blocks.blockModel) {
             block.tick(deltaTime);
 
-            if (world.getPlayer().render.intersects(block)) {
+            if (world.getPlayer().getPlayerAnimations().render.intersects(block)) {
                 block.setAlive(true);
                 if (!loaded_blocks.blockModel.contains(block)) {
                     loaded_blocks.blockModel.add(block);
