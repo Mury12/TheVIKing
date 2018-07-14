@@ -14,7 +14,7 @@ public class PlayerActions {
     private final Player p;
     private boolean spawned;
 
-    public boolean moving;
+    public static boolean moving, running, duck;
     private float maxSpeed = 4 * 32F;
     public float speedUp = 0;
     public float speedDown = 0;
@@ -51,12 +51,54 @@ public class PlayerActions {
                 p.getPlayerAnimations().getRenderDistanceW() * 48,
                 p.getPlayerAnimations().getRenderDistanceH() * 48)
         );
+        goRun();
         p.getPlayerAnimations().setMoveAmounts();
         p.getPlayerAnimations().setPlayerFigure();
     }
 
     public boolean isMoving() {
         return this.moving;
+    }
+
+    public void setMovingState(boolean b) {
+        moving = b;
+    }
+
+    public void setRunState(boolean b) {
+        running = b;
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public boolean isDuck() {
+        return duck;
+    }
+
+    public void goRun() {
+        if (!p.isTired()) {
+            if (isMoving() && isRunning()) {
+                p.drawStamina(0.5);
+            }
+        } else {
+            if (p.getStamin() >= 20) {
+                p.setTired(false);
+            }
+            setRunState(false);
+        }
+
+        if(isRunning()){
+            setMaxSpeed(194);
+        }else{
+            setMaxSpeed(128);
+        }
+        
+        if (p.getStamin() <= 0) {
+            p.setTired(true);
+        }
+        p.recoverStamina(0.1);
+
     }
 
     public boolean hasSpawned() {
@@ -130,9 +172,11 @@ public class PlayerActions {
     public boolean isSpawned() {
         return this.spawned;
     }
-    public void spawn(boolean b){
+
+    public void spawn(boolean b) {
         this.spawned = b;
     }
+
     public void attackUp() {
 
     }
@@ -196,10 +240,6 @@ public class PlayerActions {
 
     String getMsg() {
         return this.msg;
-    }
-
-    void setMoving(boolean b) {
-        this.moving = b;
     }
 
 }

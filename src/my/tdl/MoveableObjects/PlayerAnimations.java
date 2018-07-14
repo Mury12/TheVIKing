@@ -29,14 +29,14 @@ public class PlayerAnimations {
     public static final int width = 22;
     public static final int height = 22;
     private Player p;
-    public static boolean up, down, left, right, running, duck;
+    public static boolean up, down, left, right;
 
     private final int renderDistanceW = 29;
     private final int renderDistanceH = 14;
     public Rectangle render;
 
     private int animationState = 4;
-    private int animationSpeed = 1000;
+    private int animationSpeed = 500;
 
     private ArrayList<BufferedImage> listUp;
     Animator ani_up;
@@ -277,56 +277,8 @@ public class PlayerAnimations {
 
     }
 
-    public void drawStamina(double amount
-    ) {
-        if (p.getStamin() > 0) {
-            p.setStamin(p.getStamin() - amount);
-
-        }
-    }
 //vai pro hud
-
-    public void drawStaminBar(Graphics2D g
-    ) {
-
-        g.setColor(new Color(255, (int) (p.getStamin() * 2.5), 0));
-        g.fillRect(115, Main.height - 35, (int) p.getStamin(), 30);
-
-        if (p.getStamin() > 50) {
-            g.setColor(Color.BLACK);
-
-        } else {
-            g.setColor(Color.WHITE);
-
-        }
-        g
-                .drawString("" + (int) p.getStamin(), 168 - 3 * 4, Main.height - 17);
-
-        if (p.isTired()) {
-            if (p.getStamin() < 20) {
-                MessageBaloon.getFinalMessage(p.getPlayerActions().getMsg(), g);
-
-            }
-        }
-        g.setColor(Color.WHITE);
-        g.drawRect(115, Main.height - 35, 100, 30);
-
-    }
-
-    public void recoverStamina(double amount
-    ) {
-        if (p.getStamin() < 100) {
-            p.setStamin(p.getStamin() + amount);
-
-        }
-        if (p.getStamin() >= 50) {
-            p.setTired(false);
-            p.getPlayerActions().setMsg(false, " ");
-
-        }
-    }
     //
-
     public void moveMapUp() {
 
         if (!p.chk.CollisionPlayerBlock(
@@ -541,7 +493,33 @@ public class PlayerAnimations {
         g.drawRect(10, Main.height - 35, 100, 30);
 
     }
-//goes to gui
+
+    public void drawStaminBar(Graphics2D g) {
+
+        g.setColor(new Color(255, (int) (p.getStamin() * 2.5), 0));
+        System.out.println(p.getStamin());
+        g.fillRect(115, Main.height - 35, (int) p.getStamin(), 30);
+
+        if (p.getStamin() > 50) {
+            g.setColor(Color.BLACK);
+
+        } else {
+            g.setColor(Color.WHITE);
+
+        }
+        g
+                .drawString("" + (int) p.getStamin(), 168 - 3 * 4, Main.height - 17);
+
+        if (p.isTired()) {
+            if (p.getStamin() < 20) {
+                MessageBaloon.getFinalMessage(p.getPlayerActions().getMsg(), g);
+
+            }
+        }
+        g.setColor(Color.WHITE);
+        g.drawRect(115, Main.height - 35, 100, 30);
+
+    }
 
     int getWidth() {
         return PlayerAnimations.width;
@@ -593,55 +571,6 @@ public class PlayerAnimations {
             }
             animationState = 4;
 
-        }
-
-        if (running && p.getStamin() > 0 && !p.isTired()) {
-            if (p.getStamin() <= 1) {
-                p.setPlayerLevel(1);
-                p.setTired(true);
-                p.getPlayerActions().setMsg(true, p.randomStaminAlert());
-                System.out.println("You are tired, cant run now!");
-
-            }
-            if (animationSpeed != 500) {
-                animationSpeed = 500;
-                ani_left.setSpeed(animationSpeed);
-                ani_right.setSpeed(animationSpeed);
-                ani_down.setSpeed(animationSpeed);
-                ani_up.setSpeed(animationSpeed);
-                p.getPlayerActions().setMaxSpeed(p.getPlayerActions().getMaxSpeed() + 64);
-
-            }
-            if (p.getPlayerActions().isMoving() && !p.isTired()) {
-                if (duck && running) {
-                    p.getPlayerActions().setMaxSpeed(6 * 32);
-
-                }
-                drawStamina(0.5);
-
-            } else {
-                recoverStamina(0.05);
-                p.getPlayerActions().setMaxSpeed(4 * 32);
-
-            }
-        } else {
-            if (duck && p.isTired()) {
-                p.getPlayerActions().setMaxSpeed(p.getPlayerActions().getMaxSpeed() - 10);
-                recoverStamina(0.1);
-
-            } else {
-                if (animationSpeed != 1000) {
-                    animationSpeed = 1000;
-                    ani_left.setSpeed(animationSpeed);
-                    ani_right.setSpeed(animationSpeed);
-                    ani_down.setSpeed(animationSpeed);
-                    ani_up.setSpeed(animationSpeed);
-                }
-                if (!duck && !running) {
-                    p.getPlayerActions().setMaxSpeed(4 * 32F);
-                }
-                recoverStamina(0.05);
-            }
         }
     }
 

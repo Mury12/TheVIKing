@@ -90,20 +90,22 @@ public class HUDmanager {
         if (world.getPlayer().isDebugging()) {
             String dbg_string = "[DEBUGGING]";
             g.drawString(dbg_string + "", 10, 10);
-            g.drawString("MapXpos:  " + (int) world.getWorldPos().xpos, 10, 23);
-            g.drawString("MapYpos:  " + (int) world.getWorldPos().ypos, 10, 36);
-            g.drawString("WBlocks:  " + world.getTiles().getBlocks().size(), 10, 49);
-            g.drawString("CWBlocks:  " + world.getTiles().getLoaded_blocks().size(), 10, 49 + 13);
-            g.drawString("MAXSpeed: " + world.getPlayer().getPlayerActions().getMaxSpeed(), 10, 49 + 13 * 2);
-            g.drawString("Speed: " + (int) world.getPlayer().getPlayerActions().getSpeed(), 10, 49 + 13 * 3);
-            g.drawString("Stamin: " + (int) world.getPlayer().getStamin(), 10, 49 + 13 * 4);
-            g.drawString("moveAmount U-L-D-R: \n"
-                    + world.getPlayer().getPlayerAnimations().moveAmountu + "-\n "
-                    + world.getPlayer().getPlayerAnimations().moveAmountl + "-\n "
-                    + world.getPlayer().getPlayerAnimations().moveAmountd + "-\n "
-                    + world.getPlayer().getPlayerAnimations().moveAmountr, 10, 49+13*5);
-            g.drawString("isMoving: " + world.getPlayer().getPlayerActions().isMoving(), 10, 49+13*6);
-            
+            g.drawString("MapXpos:      " + (int) world.getWorldPos().xpos, 10, 23);
+            g.drawString("MapYpos:      " + (int) world.getWorldPos().ypos, 10, 36);
+            g.drawString("WBlocks:      " + world.getTiles().getBlocks().size(), 10, 49);
+            g.drawString("CWBlocks:     " + world.getTiles().getLoaded_blocks().size(), 10, 49 + 13);
+            g.drawString("MAXSpeed:     " + world.getPlayer().getPlayerActions().getMaxSpeed(), 10, 49 + 13 * 2);
+            g.drawString("Speed:        " + (int) world.getPlayer().getPlayerActions().getSpeed(), 10, 49 + 13 * 3);
+            g.drawString("Stamin:       " + (int) world.getPlayer().getStamin(), 10, 49 + 13 * 4);
+            g.drawString("keyPressed:   " + (int) world.getPlayer().getKp(), 10, 49 + 13 * 5);;
+
+            g.drawString("moveAmount U: " + world.getPlayer().getPlayerAnimations().moveAmountu, 120, 10);
+            g.drawString("moveAmount D: " + world.getPlayer().getPlayerAnimations().moveAmountd, 120, 23);
+            g.drawString("moveAmount L: " + world.getPlayer().getPlayerAnimations().moveAmountl, 120, 36);
+            g.drawString("moveAmount R: " + world.getPlayer().getPlayerAnimations().moveAmountr, 120, 49);
+            g.drawString("isMoving:     " + world.getPlayer().getPlayerActions().isMoving(), 120, 49 + 13);
+            g.drawString("isRunning:    " + world.getPlayer().getPlayerActions().isRunning(), 120, 49 + 13*2);
+            g.drawString("isTired:      " + world.getPlayer().isTired(), 120, 49 + 13*3);
 
         }
 

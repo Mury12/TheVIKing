@@ -43,7 +43,7 @@ public class Player implements KeyListener {
     private HUDmanager hudm;
     private GUImanager guim;
     private final Vector2F pos;
-    private int kp;
+    public static int kp;
 
     public Player() {
         pos = new Vector2F(Main.width / 2 - PlayerAnimations.width / 2, Main.height / 2 - PlayerAnimations.height / 2); //define o player exatamente no meio da tela
@@ -125,36 +125,36 @@ public class Player implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode(); //pega o código da tecla pressionada
-//        System.out.println(key);
+        kp = key;
         if (key == KeyEvent.VK_UP) {
             if (!playerAct.isMoving()) {
-                playerAct.setMoving(true);
+                playerAct.setMovingState(true);
             }
             PlayerAnimations.up = true;
         }
         if (key == KeyEvent.VK_DOWN) {
             if (!playerAct.isMoving()) {
-                playerAct.setMoving(true);
+                playerAct.setMovingState(true);
             }
             PlayerAnimations.down = true;
         }
         if (key == KeyEvent.VK_LEFT) {
             if (!playerAct.isMoving()) {
-                playerAct.setMoving(true);
+                playerAct.setMovingState(true);
             }
             PlayerAnimations.left = true;
         }
         if (key == KeyEvent.VK_RIGHT) {
             if (!playerAct.isMoving()) {
-                playerAct.setMoving(true);
+                playerAct.setMovingState(true);
             }
             PlayerAnimations.right = true;
         }
         if (key == KeyEvent.VK_SHIFT) {
-            PlayerAnimations.running = true;
+            playerAct.setRunState(true);
         }
         if (key == KeyEvent.VK_CONTROL) {
-            playerAni.duck = true;
+            PlayerActions.duck = true;
         }
 
         if (playerAct.isChatting()) {
@@ -190,10 +190,10 @@ public class Player implements KeyListener {
             PlayerAnimations.right = false;
         }
         if (key == KeyEvent.VK_SHIFT) {
-            PlayerAnimations.running = false;
+            playerAct.setRunState(false);
         }
         if (key == KeyEvent.VK_CONTROL) {
-            PlayerAnimations.duck = false;
+            PlayerActions.duck = false;
         }
         if (key == KeyEvent.VK_ESCAPE) {
             System.exit(1);
@@ -238,7 +238,22 @@ public class Player implements KeyListener {
             }
         }
     }
+    public void recoverStamina(double amount) {
+        if (getStamin() < 100) {
+            setStamin(getStamin() + amount);
+        }
+        if (getStamin() >= 50) {
+            setTired(false);
+            getPlayerActions().setMsg(false, " ");
 
+        }
+    }
+
+    public void drawStamina(double amount) {
+        if (getStamin() > 0) {
+            setStamin(getStamin() - amount);
+        }
+    }
     // GETTERS E SETTERS
     public Vector2F getPos() {
         return pos;
