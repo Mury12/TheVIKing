@@ -102,10 +102,13 @@ public class PlayerActions {
         switch (direction.toLowerCase()) {
             case "up":
                 speed = this.speedUp;
+                break;
             case "down":
                 speed = this.speedDown;
+                break;
             case "left":
                 speed = this.speedLeft;
+                break;
             case "right":
                 speed = this.speedRight;
         }

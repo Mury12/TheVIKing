@@ -125,33 +125,33 @@ public class Player implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode(); //pega o código da tecla pressionada
-        System.out.println(key);
+//        System.out.println(key);
         if (key == KeyEvent.VK_UP) {
             if (!playerAct.isMoving()) {
                 playerAct.setMoving(true);
             }
-            playerAni.up = true;
+            PlayerAnimations.up = true;
         }
         if (key == KeyEvent.VK_DOWN) {
             if (!playerAct.isMoving()) {
-                playerAct.moving = true;
+                playerAct.setMoving(true);
             }
-            playerAni.down = true;
+            PlayerAnimations.down = true;
         }
         if (key == KeyEvent.VK_LEFT) {
             if (!playerAct.isMoving()) {
-                playerAct.moving = true;
+                playerAct.setMoving(true);
             }
-            playerAni.left = true;
+            PlayerAnimations.left = true;
         }
         if (key == KeyEvent.VK_RIGHT) {
             if (!playerAct.isMoving()) {
-                playerAct.moving = true;
+                playerAct.setMoving(true);
             }
-            playerAni.right = true;
+            PlayerAnimations.right = true;
         }
         if (key == KeyEvent.VK_SHIFT) {
-            playerAni.running = true;
+            PlayerAnimations.running = true;
         }
         if (key == KeyEvent.VK_CONTROL) {
             playerAni.duck = true;
@@ -178,22 +178,22 @@ public class Player implements KeyListener {
         int key = e.getKeyCode();
 
         if (key == KeyEvent.VK_UP) {
-            playerAni.up = false;
+            PlayerAnimations.up = false;
         }
         if (key == KeyEvent.VK_DOWN) {
-            playerAni.down = false;
+            PlayerAnimations.down = false;
         }
         if (key == KeyEvent.VK_LEFT) {
-            playerAni.left = false;
+            PlayerAnimations.left = false;
         }
         if (key == KeyEvent.VK_RIGHT) {
-            playerAni.right = false;
+            PlayerAnimations.right = false;
         }
         if (key == KeyEvent.VK_SHIFT) {
-            playerAni.running = false;
+            PlayerAnimations.running = false;
         }
         if (key == KeyEvent.VK_CONTROL) {
-            playerAni.duck = false;
+            PlayerAnimations.duck = false;
         }
         if (key == KeyEvent.VK_ESCAPE) {
             System.exit(1);

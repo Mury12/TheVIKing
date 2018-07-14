@@ -49,10 +49,10 @@ public class PlayerAnimations {
     private ArrayList<BufferedImage> listIdle;
     Animator ani_idle;
 
-    float moveAmountu;
-    float moveAmountd;
-    float moveAmountl;
-    float moveAmountr;
+    public float moveAmountu;
+    public float moveAmountd;
+    public float moveAmountl;
+    public float moveAmountr;
 
     private World world;
 
@@ -327,8 +327,7 @@ public class PlayerAnimations {
     }
     //
 
-    public void moveMapUp(float moveAmountu) {
-        System.out.println("moveMapUp");
+    public void moveMapUp() {
 
         if (!p.chk.CollisionPlayerBlock(
                 new Point((int) (pos.xpos + world.map_pos.xpos),
@@ -344,14 +343,13 @@ public class PlayerAnimations {
 
             }
             world.map_pos.ypos -= moveAmountu;
-
         } else {
             p.getPlayerActions().setSpeed("up", 0);
 
         }
     }
 
-    public void moveMapUpGlide(float moveAmountu) {
+    public void moveMapUpGlide() {
         if (!p.chk.CollisionPlayerBlock(
                 new Point((int) (pos.xpos + world.map_pos.xpos),
                         (int) (pos.ypos + world.map_pos.ypos - moveAmountu)),
@@ -375,18 +373,16 @@ public class PlayerAnimations {
 
     }
 
-    public void moveMapDown(float moveAmountd) {
-        System.out.println("moveMapDown");
+    public void moveMapDown() {
 
-        if (!p.chk
-                .CollisionPlayerBlock(
-                        new Point((int) (pos.xpos + world.map_pos.xpos),
-                                (int) (pos.ypos + world.map_pos.ypos + height + moveAmountd)),
-                        new Point((int) (pos.xpos + world.map_pos.xpos + width),
-                                (int) (pos.ypos + world.map_pos.ypos + height + moveAmountd))
-                )) {
+        if (!p.chk.CollisionPlayerBlock(
+                new Point((int) (pos.xpos + world.map_pos.xpos),
+                        (int) (pos.ypos + world.map_pos.ypos + height + moveAmountd)),
+                new Point((int) (pos.xpos + world.map_pos.xpos + width),
+                        (int) (pos.ypos + world.map_pos.ypos + height + moveAmountd))
+        )) {
             if (p.getPlayerActions().getSpeed("down") < p.getPlayerActions().getMaxSpeed()) {
-                p.getPlayerActions().setSpeed("down", p.getPlayerActions().getSpeed("up") + p.getPlayerActions().getSlowdown());
+                p.getPlayerActions().setSpeed("down", p.getPlayerActions().getSpeed("down") + p.getPlayerActions().getSlowdown());
 
             } else {
                 p.getPlayerActions().setSpeed("down", p.getPlayerActions().getMaxSpeed());
@@ -400,8 +396,7 @@ public class PlayerAnimations {
         }
     }
 
-    public void moveMapDownGlide(float moveAmountd
-    ) {
+    public void moveMapDownGlide() {
 
         if (!p.chk
                 .CollisionPlayerBlock(
@@ -411,7 +406,7 @@ public class PlayerAnimations {
                                 (int) (pos.ypos + world.map_pos.ypos + height + moveAmountd))
                 )) {
             if (p.getPlayerActions().getSpeed("down") != 0) {
-                p.getPlayerActions().setSpeed("down", p.getPlayerActions().getSpeed("up") - p.getPlayerActions().getSlowdown());
+                p.getPlayerActions().setSpeed("down", p.getPlayerActions().getSpeed("down") - p.getPlayerActions().getSlowdown());
 
                 if (p.getPlayerActions().getSpeed("down") < 0) {
                     p.getPlayerActions().setSpeed("down", 0);
@@ -427,8 +422,7 @@ public class PlayerAnimations {
 
     }
 
-    public void moveMapLeft(float moveAmountl) {
-        System.out.println("moveMapLeft");
+    public void moveMapLeft() {
 
         if (!p.chk.CollisionPlayerBlock(
                 new Point((int) (pos.xpos + world.map_pos.xpos - moveAmountl),
@@ -437,12 +431,13 @@ public class PlayerAnimations {
                         (int) (pos.ypos + world.map_pos.ypos))
         )) {
             if (p.getPlayerActions().getSpeed("left") < p.getPlayerActions().getMaxSpeed()) {
-                p.getPlayerActions().setSpeed("left", p.getPlayerActions().getSpeed("left") + p.getPlayerActions().getSlowdown()
+                p.getPlayerActions().setSpeed(
+                        "left", p.getPlayerActions().getSpeed("left")
+                        + p.getPlayerActions().getSlowdown()
                 );
 
             } else {
                 p.getPlayerActions().setSpeed("left", p.getPlayerActions().getMaxSpeed());
-
             }
             world.map_pos.xpos -= moveAmountl;
 
@@ -452,7 +447,7 @@ public class PlayerAnimations {
         }
     }
 
-    public void moveMapLeftGlide(float moveAmountl) {
+    public void moveMapLeftGlide() {
         if (!p.chk.CollisionPlayerBlock(
                 new Point((int) (pos.xpos + world.map_pos.xpos - moveAmountl),
                         (int) (pos.ypos + world.map_pos.ypos)),
@@ -475,8 +470,7 @@ public class PlayerAnimations {
         }
     }
 
-    public void moveMapRight(float moveAmountr) {
-        System.out.println("moveMapRight");
+    public void moveMapRight() {
 
         if (!p.chk.CollisionPlayerBlock(
                 new Point((int) (pos.xpos + world.map_pos.xpos + width + moveAmountr),
@@ -492,6 +486,7 @@ public class PlayerAnimations {
 
             }
             world.map_pos.xpos += moveAmountr;
+//            System.out.println(world.map_pos.xpos + " " + moveAmountr);
 
         } else {
             p.getPlayerActions().setSpeed("right", 0);
@@ -499,8 +494,7 @@ public class PlayerAnimations {
         }
     }
 
-    public void moveMapRightGlide(float moveAmountr
-    ) {
+    public void moveMapRightGlide() {
         if (!p.chk.CollisionPlayerBlock(
                 new Point((int) (pos.xpos + world.map_pos.xpos + width + moveAmountr),
                         (int) (pos.ypos + world.map_pos.ypos)),
@@ -508,7 +502,7 @@ public class PlayerAnimations {
                         (int) (pos.ypos + world.map_pos.ypos + height))
         )) {
             if (p.getPlayerActions().getSpeed("right") != 0) {
-                p.getPlayerActions().setSpeed("right", p.getPlayerActions().getSpeed("right") + p.getPlayerActions().getSlowdown());
+                p.getPlayerActions().setSpeed("right", p.getPlayerActions().getSpeed("right") - p.getPlayerActions().getSlowdown());
 
                 if (p.getPlayerActions().getSpeed("right") < 0) {
                     p.getPlayerActions().setSpeed("right", 0);
@@ -559,34 +553,34 @@ public class PlayerAnimations {
 
     public void setPlayerFigure() {
         if (up) {
-            moveMapUp(moveAmountu);
+            moveMapUp();
             animationState = 0;
 
         } else {
-            moveMapUpGlide(moveAmountu);
+            moveMapUpGlide();
         }
         if (down) {
-            moveMapDown(moveAmountd);
+            moveMapDown();
             animationState = 1;
 
         } else {
-            moveMapDownGlide(moveAmountd);
+            moveMapDownGlide();
 
         }
         if (left) {
-            moveMapLeft(moveAmountl);
+            moveMapLeft();
             animationState = 3;
 
         } else {
-            moveMapLeftGlide(moveAmountl);
+            moveMapLeftGlide();
 
         }
         if (right) {
-            moveMapRight(moveAmountr);
+            moveMapRight();
             animationState = 2;
 
         } else {
-            moveMapRightGlide(moveAmountr);
+            moveMapRightGlide();
 
         }
         if (!up && !down && !right && !left || (((left && right) || (up && down)) && (!up || !down))) {

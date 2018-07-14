@@ -27,101 +27,109 @@ public class HUDmanager {
 
     private Player player;
     private BufferedImage light;
-    private BufferedImage lightmap = new BufferedImage(100*32, 100*32, BufferedImage.TYPE_INT_ARGB);
+    private BufferedImage lightmap = new BufferedImage(100 * 32, 100 * 32, BufferedImage.TYPE_INT_ARGB);
     public ArrayList<Light> lights = new ArrayList<>();
     private Vector2F lightm = new Vector2F();
     private World world;
-    
+
     public HUDmanager(Player player) {
         this.player = player;
         //addLights();
         light = loadImageFrom.LoadImageFrom(Main.class, "light.png");
     }
 
-    public HUDmanager(World world){
+    public HUDmanager(World world) {
         this.world = world;
     }
+
     public HUDmanager(Player player, World world) {
         this.world = world;
         this.player = player;
     }
-    
+
     private static Polygon up;
     private static Polygon down;
     private static Polygon right;
     private static Polygon left;
-    
+
     private void addLights() {
 //        lights.add(new Light(200, 200, 200, 120));
     }
-    
-    public void updateLights(){
+
+    public void updateLights() {
         Graphics2D g = null;
-        
-        if(g == null){
+
+        if (g == null) {
             g = (Graphics2D) lightmap.getGraphics();
         }
-        g.setColor(new Color(0,0,0,255));
+        g.setColor(new Color(0, 0, 0, 255));
         g.fillRect(0, 0, lightmap.getWidth(), lightmap.getHeight());
         g.setComposite(AlphaComposite.DstOut);
-        
-        for(Light light : lights){
+
+        for (Light light : lights) {
             light.render(g);
         }
         g.dispose();
     }
-    public void render(Graphics2D g){
+
+    public void render(Graphics2D g) {
         /*lights
          *updateLights();
          *g.drawImage(lightmap, (int)lightm.getWorldLocation().xpos, (int)lightm.getWorldLocation().ypos, null);
-         */      
+         */
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, Main.width, Main.height / 6);
         g.fillRect(0, (Main.height * 5) / 6, Main.width, Main.height / 6);
         g.setColor(Color.WHITE);
-        
+
         //g.drawImage(light, 0, 0, Main.width, Main.height, null);
         g.setFont(new Font("Arial", 0, 10));
 //        g.drawString("x: "+(int)player.getPos().getWorldLocation().xpos, 10, 10);
 //        g.drawString("y: "+(int)player.getPos().getWorldLocation().ypos, 10, 23);
-        
-        if(world.getPlayer().isDebugging()){
+
+        if (world.getPlayer().isDebugging()) {
             String dbg_string = "[DEBUGGING]";
-            g.drawString(dbg_string+"", 10, 10);
-            g.drawString("MapXpos:  "+(int)world.getWorldPos().xpos, 10, 23);
-            g.drawString("MapYpos:  "+(int)world.getWorldPos().ypos, 10, 36);
-            g.drawString("WBlocks:  "+world.getTiles().getBlocks().size(), 10, 49);
-            g.drawString("CWBlocks:  "+world.getTiles().getLoaded_blocks().size(), 10, 49+13);
-            g.drawString("MAXSpeed: "+world.getPlayer().getPlayerActions().getMaxSpeed(), 10, 49+13*2);
-            g.drawString("Speed: "+(int)world.getPlayer().getPlayerActions().getSpeed(), 10, 49+13*3);
-            g.drawString("Stamin: "+(int)world.getPlayer().getStamin(), 10, 49+13*4);
-            g.drawString("Key Pressed: "+(int)world.getPlayer().getKp(), 10, 49+13*5);
+            g.drawString(dbg_string + "", 10, 10);
+            g.drawString("MapXpos:  " + (int) world.getWorldPos().xpos, 10, 23);
+            g.drawString("MapYpos:  " + (int) world.getWorldPos().ypos, 10, 36);
+            g.drawString("WBlocks:  " + world.getTiles().getBlocks().size(), 10, 49);
+            g.drawString("CWBlocks:  " + world.getTiles().getLoaded_blocks().size(), 10, 49 + 13);
+            g.drawString("MAXSpeed: " + world.getPlayer().getPlayerActions().getMaxSpeed(), 10, 49 + 13 * 2);
+            g.drawString("Speed: " + (int) world.getPlayer().getPlayerActions().getSpeed(), 10, 49 + 13 * 3);
+            g.drawString("Stamin: " + (int) world.getPlayer().getStamin(), 10, 49 + 13 * 4);
+            g.drawString("moveAmount U-L-D-R: \n"
+                    + world.getPlayer().getPlayerAnimations().moveAmountu + "-\n "
+                    + world.getPlayer().getPlayerAnimations().moveAmountl + "-\n "
+                    + world.getPlayer().getPlayerAnimations().moveAmountd + "-\n "
+                    + world.getPlayer().getPlayerAnimations().moveAmountr, 10, 49+13*5);
+            g.drawString("isMoving: " + world.getPlayer().getPlayerActions().isMoving(), 10, 49+13*6);
             
+
         }
-        
+
         //Polígonos a serem desenhados na tela; ux = int[]={top-r, bot-r, bot-l, top-l] <-- de acordo com a largura
-        int[] ux = new int[]{Main.width, Main.width/2, Main.width/2, 0};
+        int[] ux = new int[]{Main.width, Main.width / 2, Main.width / 2, 0};
         //uy int[]={top-r, bot-r, bot-l, top-l] de acordo com a altura
-        int[] uy = new int[]{0, Main.height/2, Main.height/2, 0};
+        int[] uy = new int[]{0, Main.height / 2, Main.height / 2, 0};
         up = new Polygon(ux, uy, ux.length);
         g.drawPolygon(up);
-        
-        int[] dx = new int[]{Main.width, Main.width/2, Main.width/2, 0};
-        int[] dy = new int[]{Main.height, Main.height/2, Main.height/2, Main.height};
+
+        int[] dx = new int[]{Main.width, Main.width / 2, Main.width / 2, 0};
+        int[] dy = new int[]{Main.height, Main.height / 2, Main.height / 2, Main.height};
         down = new Polygon(dx, dy, dx.length);
         g.drawPolygon(down);
-        
-        int[] rx = new int[]{Main.width, Main.width/2, Main.width/2, Main.width};
-        int[] ry = new int[]{Main.height, Main.height/2, Main.height/2, 0};
+
+        int[] rx = new int[]{Main.width, Main.width / 2, Main.width / 2, Main.width};
+        int[] ry = new int[]{Main.height, Main.height / 2, Main.height / 2, 0};
         right = new Polygon(rx, ry, rx.length);
         g.drawPolygon(right);
-        
-        int[] lx = new int[]{0, Main.width/2, Main.width/2, 0};
-        int[] ly = new int[]{Main.height, Main.height/2, Main.height/2, 0};
+
+        int[] lx = new int[]{0, Main.width / 2, Main.width / 2, 0};
+        int[] ly = new int[]{Main.height, Main.height / 2, Main.height / 2, 0};
         left = new Polygon(lx, ly, lx.length);
         g.drawPolygon(left);
         String msg = "Olá, como vai você?";
-    }  
+    }
 
     public static Polygon getDownPol() {
         return down;
@@ -138,5 +146,5 @@ public class HUDmanager {
     public static Polygon getUpPol() {
         return up;
     }
-    
+
 }
