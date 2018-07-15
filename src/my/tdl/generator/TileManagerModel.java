@@ -7,6 +7,8 @@ package my.tdl.generator;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import my.project.gop.main.Vector2F;
+import my.tdl.generator.BlockModel.BlockType;
 
 /**
  *
@@ -33,7 +35,7 @@ public class TileManagerModel {
         for (BlockModel block : blocks.blockModel) {
             block.tick(deltaTime);
 
-            if (world.getPlayer().render.intersects(block)) {
+            if (world.getPlayer().getPlayerAnimations().render.intersects(block)) {
                 block.setAlive(true);
                 if (!loaded_blocks.blockModel.contains(block)) {
                     loaded_blocks.blockModel.add(block);
@@ -69,5 +71,6 @@ public class TileManagerModel {
             block.render(g);
         }
     }
+
 
 }

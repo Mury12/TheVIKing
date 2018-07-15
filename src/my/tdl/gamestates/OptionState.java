@@ -34,7 +34,7 @@ public class OptionState extends GameState{
     @Override
     public void init() {
         mm = new Mousemanager();
-        graphics = new GameStateButton(btnAlignmentH(ALIGN.CENTER), btnAlignmentV(), "Graphics");
+        graphics = new GameStateButton(btnAlignmentH(ALIGN.CENTER), btnAlignmentV(), "FullScreen/Window");
         quality = new GameStateButton(btnAlignmentH(ALIGN.CENTER), btnAlignmentV(), "Quality");
         sound = new GameStateButton(btnAlignmentH(ALIGN.CENTER), btnAlignmentV(), "Sound Vol");
         music = new GameStateButton(btnAlignmentH(ALIGN.CENTER), btnAlignmentV(), "Music Vol");
@@ -69,6 +69,7 @@ public class OptionState extends GameState{
         back.tick();
         music.tick();
         sound.tick();
+
     }
     
     @Override

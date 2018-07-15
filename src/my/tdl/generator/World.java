@@ -21,7 +21,7 @@ public class World {
     private GameStateManager gsm;
     public Vector2F map_pos = new Vector2F();
     public TileManagerController tiles;
-    private static Player player;
+    private static Player player = new Player();
     private String worldName;
     private BufferedImage map;
     private int world_width;
@@ -34,7 +34,7 @@ public class World {
     private Hostile mob;
     private BlockController bc = new BlockController();//controlls blocks interactions
     //WorldSpawn
-    
+
     public World(String worldName, BufferedImage world_image, int w_width, int w_height) {
         this.worldName = worldName;
         this.map = world_image;
@@ -42,7 +42,8 @@ public class World {
         this.world_height = w_height;
 
     }
-    public World(String world_name){
+
+    public World(String world_name) {
         this.worldName = world_name;
         Vector2F.setWorldVariables(map_pos.xpos, map_pos.ypos);
     }
@@ -51,20 +52,20 @@ public class World {
         this.worldName = worldName;
         this.gsm = gsm;
     }
-    
-    public void init(){
+
+    public void init() {
         this.tiles = new TileManagerController(this);
         map_pos.xpos = bc.getSpawn().getBlockLocation().xpos - player.getPos().xpos + 10;
         map_pos.ypos = bc.getSpawn().getBlockLocation().ypos - player.getPos().ypos + 8;
-        
+
         fps.start();
-        if(player != null)
+        if (player != null) {
             player.init(this);
+        }
     }
-        
+
     public void generateWorld(String world_image) {
-        
-        
+
         map = null;
         if (hasSize) {
             try {
@@ -113,30 +114,30 @@ public class World {
                         case 0xAEB459:
                             tiles.getBlocksController().addBlockToModel(bc.newBlockModel(new Vector2F(x * bc.getBlockSize(), y * bc.getBlockSize()), BlockModel.BlockType.SPAWN_POS));
                             break;
-
                     }
                 }
             }
         }
+
         hasGenerated = true;
     }
 
-    public void addPlayer(Player player){
+    public void addPlayer(Player player) {
         player = new Player();
         this.player = player;
     }
-    
+
     public void tick(double deltaTime) {
-        if(player.hasSpawned()){
+        if (player.getPlayerActions().hasSpawned()) {
             Vector2F.setWorldVariables(map_pos.xpos, map_pos.ypos);
-        }else{
+        } else {
             bc.getSpawn().tick(deltaTime);
         }
         tiles.tick(deltaTime);
-        
+
         if (!bc.getBlockEnts().isEmpty()) {
             for (BlockView ent : bc.getBlockEnts()) {
-                if (player.render.intersects(ent)) {
+                if (player.getPlayerAnimations().getRender().intersects(ent)) {
                     ent.tick(deltaTime);
                     ent.setAlive(true);
                 } else {
@@ -144,63 +145,69 @@ public class World {
                 }
             }
         }
-        if(player != null)
-        player.tick(deltaTime);
+        if (player != null) {
+            player.getPlayerActions().tick(deltaTime);
+        }
     }
-    
-    public void dropBlockEntity(Vector2F pos, BufferedImage block_image){
+
+    public void dropBlockEntity(Vector2F pos, BufferedImage block_image) {
         BlockView ent = new BlockView(pos, block_image);
-        if(!bc.getBlockEnts().contains(ent)){
+        if (!bc.getBlockEnts().contains(ent)) {
             bc.addEntityToBlock(ent);
         }
     }
-    
-    public void setWorldSpawn(float xPos, float yPos){
-        if(xPos < world_width || yPos < world_height)
-        if(xPos < world_width){
-            if(yPos < world_height){
-                bc.setSpawn(yPos, xPos);
-            }else{
-                System.out.println("Y spawn position out of the map!");
-            }
-        }else{
+
+    public void setWorldSpawn(float xPos, float yPos) {
+        if (xPos < world_width || yPos < world_height) {
+            if (xPos < world_width) {
+                if (yPos < world_height) {
+                    bc.setSpawn(yPos, xPos);
+                } else {
+                    System.out.println("Y spawn position out of the map!");
+                }
+            } else {
                 System.out.println("X spawn position out of the map!");
             }
-        else System.out.println("X AND Y spanw position out of the ");
+        } else {
+            System.out.println("X AND Y spanw position out of the ");
+        }
     }
-    
-   public Vector2F getWorldSpawn(){
-       return bc.getSpawn().getBlockLocation();
-   }
-    
+
+    public Vector2F getWorldSpawn() {
+        return bc.getSpawn().getBlockLocation();
+    }
+
     public void removeDropedEntity(BlockView blockEntity) {
-        if(bc.getBlockEnts().contains(blockEntity)){
+        if (bc.getBlockEnts().contains(blockEntity)) {
             bc.removeEntityFromBlock(blockEntity);
         }
     }
-    
+
     //renderiza o mapa a partir do TileManager
     public void render(Graphics2D g) {
         tiles.render(g);
-        if(!player.hasSpawned()){
+        if (!player.getPlayerActions().hasSpawned()) {
             bc.getSpawn().render(g);
         }
         ///descarrega os blocos que não estão na tela
-        if(!bc.isEntEmpty()){ //só renderiza se não estiver vazio, diminuindo o lag
-            for(BlockView ent : bc.getBlockEnts()){
-                if(player.render.intersects(ent))
+        if (!bc.isEntEmpty()) { //só renderiza se não estiver vazio, diminuindo o lag
+            for (BlockView ent : bc.getBlockEnts()) {
+                if (player.getPlayerAnimations().render.intersects(ent)) {
                     ent.render(g);
+                }
             }
         }
-        if(player != null)
+        if (player != null) {
             player.render(g);
-        if(mob != null)
+        }
+        if (mob != null) {
             mob.render(g);
-        
-        if(Player.isDebugging()){
+        }
+
+        if (player.isDebugging()) {
             String str = "BlockEnt";
-            g.drawString("BlockEnt:  "+bc.getBlockEnts().size(), Main.width - (str.length()+5)*8, 10);
-            g.drawString("FPS:  "+(int)fps.getFps(), Main.width - (str.length()+5)*8, 23);
+            g.drawString("BlockEnt:  " + bc.getBlockEnts().size(), Main.width - (str.length() + 5) * 8, 10);
+            g.drawString("FPS:  " + (int) fps.getFps(), Main.width - (str.length() + 5) * 8, 23);
         }
     }
 
@@ -227,14 +234,14 @@ public class World {
     public void setWorld_width(int world_width) {
         this.world_width = world_width;
     }
-    
-    public void setWorldSize(int width, int height){
+
+    public void setWorldSize(int width, int height) {
         setWorld_width(width);
         setWorld_height(height);
         hasSize = true;
     }
-    
-    public Vector2F getWorldPos(){
+
+    public Vector2F getWorldPos() {
         return map_pos;
     }
 
@@ -246,32 +253,46 @@ public class World {
         return tiles;
     }
 
-    public static Player getPlayer() {
+    public Player getPlayer() {
         return player;
     }
-    
-    public boolean hasGenerated(){
+
+    public boolean hasGenerated() {
         return this.hasGenerated;
     }
-    
-    public GameStateManager getGsm(){
+
+    public GameStateManager getGsm() {
         return gsm;
     }
-    
-    public void changeLevel(String worldname, String map_name){
-        if(!worldname.equals(this.worldName)){
+
+    public void changeLevel(String worldname, String map_name) {
+        if (!worldname.equals(this.worldName)) {
             resetWorld();
             gsm.states.push(new DungeonLevelLoader(gsm, worldname, map_name));
             gsm.states.peek().init();
-        }else{
+        } else {
             System.err.println("You are alrd in that wld");
         }
     }
-    
-    public void resetWorld(){
+
+    public void resetWorld() {
         tiles.getBlocks().clear();
         tiles.getLoaded_blocks().clear();
         bc.clearBlockEntities();
         bc.clearSpawn();
     }
+
+    public BlockModel.BlockType getCurrentBlock() {
+        Vector2F pos = getWorldPos();
+        int blockSize = BlockModel.BlockSize;
+        float xp = (13 * blockSize) + ((int) pos.xpos / blockSize) * blockSize;
+        float yp = (7 * blockSize) + ((int) pos.ypos / blockSize) * blockSize;
+        for (BlockModel block : tiles.getBlocks()) {
+            if (block.pos.ypos == yp && block.pos.xpos == xp) {
+                return block.blocktype;
+            }
+        }
+        return BlockModel.BlockType.NOT_FOUND;
+    }
+
 }
