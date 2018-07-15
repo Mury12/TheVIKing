@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Random;
 import my.project.gop.main.Vector2F;
 import my.project.gop.main.loadImageFrom;
@@ -63,31 +64,31 @@ public class Player implements KeyListener {
                 playerAni.getRenderDistanceW() * 48,
                 playerAni.getRenderDistanceH() * 48)
         );
-        
+
         playerAni.animatePlayer();
         playerAct.spawn(true);
     }
 
     //O MÉTODO TICK É RESPONSÁVEL POR ATUALIZAR AS INFORMAÇÕES PROCESSADAS NO GAME
     //sistema de cansaço
+    /**
+     * Stamina Alert
+     * This method is responsible for random select a message to display when player's stamina is out.
+     * To add more sentences, just use a new array line adding msg.add("Your Blowing Message") and the function
+     * will automatically calculate the random number from the Array to select.
+     * @return a final message.
+     */
     public String randomStaminAlert() {
-        String msg = "Sorry, I can't do anything right now.";
+        ArrayList<String> msg = new ArrayList<>();
         Random rand = new Random();
-        switch (rand.nextInt(4)) {
-            case 1:
-                msg = "I'd be glad if you stop running now..";
-                break;
-            case 2:
-                msg = "Wow! That was really tiring!";
-                break;
-            case 3:
-                msg = "My stamin is out, I can't run.";
-                break;
-            case 4:
-                msg = "PLEASE BABY! LET ME REST A LITTLE!!";
-                break;
-        }
-        return msg;
+        msg.add("I'd be glad if you stop running now..");
+        msg.add("Wow! That was really tiring!");
+        msg.add("My stamin is out, I can't run.");
+        msg.add("PLEASE BABY! LET ME REST A LITTLE!!");
+        msg.add("F**K! I HATE THIS HUNTS!");
+        msg.add("HELLS BELLS! I really wanted to catch it but.. you know.. I'm a FAG!");
+        
+        return msg.get(rand.nextInt(msg.size()));
     }
 
     /**
@@ -235,37 +236,72 @@ public class Player implements KeyListener {
             }
         }
     }
+
     public void recoverStamina(double amount) {
         if (getStamin() < 100) {
             setStamin(getStamin() + amount);
         }
     }
 
+    /**
+     * Stamina Drawing This is used to draw stamina from the character total
+     * stamina. For a while it is used only by the running system.
+     *
+     * @param amount is the amount wanted for tick refresh. Default: 0.5
+     */
     public void drawStamina(double amount) {
         if (getStamin() > 0) {
             setStamin(getStamin() - amount);
         }
     }
+
     // GETTERS E SETTERS
     public Vector2F getPos() {
         return pos;
     }
 
+    /**
+     * Player Spawn Location This function sets the Player spawn position
+     * according to the map.
+     *
+     * @param pos is the Vector2F position to set the point.
+     */
     public void setSpawn(Vector2F pos) {
         this.pos.setWorldVariables(pos.getWorldLocation().xpos, pos.getWorldLocation().ypos);
     }
 
+    /**
+     * Debug Screen This function is responsible to command a debug screen. When
+     * its value returns true the debug function starts.
+     *
+     * @return a boolean param to start the debug screen.
+     */
     public boolean isDebugging() {
         return debug;
     }
 
+    /**
+     * GET Player Life Points This function is responsible to return the total
+     * amount of current player life points.
+     *
+     * @return a double (converted to integer on showing) value.
+     */
     public double getLifePoints() {
-
         return lifePoints + (playerLevel + 1) * 13 + 5;
     }
 
+    /**
+     * Tired System This function is responsible to indicate that the player is
+     * tired and can not run or perform any waste of stamina.
+     *
+     * @return true or false.
+     */
     public boolean isTired() {
         return this.tired;
+    }
+
+    void setTired(boolean b) {
+        this.tired = b;
     }
 
     public static PlayerActions getPlayerActions() {
@@ -276,16 +312,25 @@ public class Player implements KeyListener {
         return playerAni;
     }
 
+    /**
+     * GET Player Level This function is responsible for getting the level of
+     * the player.
+     *
+     * @return an integer indicating the player level.
+     */
     public int getPlayerLevel() {
         return playerLevel;
     }
 
+    /**
+     * SET Player Level This function is responsible for increase player's
+     * level.
+     *
+     * @param plus will be calculated based on Experience Points given to the
+     * player and then converted to level.
+     */
     public void setPlayerLevel(int plus) {
         playerLevel = getPlayerLevel() + 1;
-    }
-
-    void setTired(boolean b) {
-        this.tired = b;
     }
 
     public double getStamin() {
