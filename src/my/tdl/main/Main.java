@@ -27,9 +27,10 @@ public class Main {
     public static GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     public static int width = gd.getDisplayMode().getWidth(); //captura o tamanho da tela
     public static int height = gd.getDisplayMode().getHeight();
+    public static GameWindow frame;
     
     public static void main(String[] args) {
-        GameWindow frame = new GameWindow("The VI King", width, height); //Cria uma janela baseada na classe do projeto GameOperatingSystem, definia anteriormente e exportada como jar.
+        frame = new GameWindow("The VI King", width, height); //Cria uma janela baseada na classe do projeto GameOperatingSystem, definia anteriormente e exportada como jar.
         frame.setFullScreen(0);
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Cursor cursor = toolkit.createCustomCursor(toolkit.getImage(""), new Point(0,0), "Cursor");

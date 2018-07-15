@@ -17,7 +17,7 @@ public class BlockModel extends Rectangle {
 
     public Vector2F pos = new Vector2F();
     public static int BlockSize = 48; //tamanho do block na tela
-    private BlockType blocktype;
+    public BlockType blocktype;
     private BufferedImage block;
     private boolean isSolid;
     private boolean isAlive;
@@ -67,7 +67,7 @@ public class BlockModel extends Rectangle {
         }
     }
 
-    private void getBlockType() {
+    public void getBlockType() {
         switch (this.blocktype) {
             //FLOORS
             case STONE_1:
@@ -134,6 +134,9 @@ public class BlockModel extends Rectangle {
         WALL_1_WINDOW,
         WALL_1_WINE,
         WALL_1_ROOF,
+        
+        //NOTFOUND
+        NOT_FOUND,
 
     }
 

@@ -27,8 +27,8 @@ public class Player implements KeyListener {
     private static boolean debug = false;
 
     //velocidade do jogador para os lados.
-    private PlayerActions playerAct;
-    private PlayerAnimations playerAni;
+    private static PlayerActions playerAct;
+    private static PlayerAnimations playerAni;
     private final BufferedImage msg_bgbody = loadImageFrom.LoadImageFrom(Main.class, "msg_bgbody.png");
     private final BufferedImage msg_bgtail = loadImageFrom.LoadImageFrom(Main.class, "msg_tailbg.png");
     private final BufferedImage msg_bgright = loadImageFrom.LoadImageFrom(Main.class, "msg_bgright.png");
@@ -105,8 +105,6 @@ public class Player implements KeyListener {
         //g.drawRect((int)pos.xpos - renderDistanceW*32/2 + width / 2, (int)pos.ypos - renderDistanceH*32 / 2 + height / 2, renderDistanceW * 32, renderDistanceH * 32);
         playerAni.drawAnimation(g);
         hudm.render(g);
-        playerAni.drawLifeBar(g);
-        playerAni.drawStaminBar(g);
         g.setColor(Color.WHITE);
         g.drawString("Level: " + getPlayerLevel(), 11, Main.height - 40);
         guim.render(g);
@@ -203,7 +201,6 @@ public class Player implements KeyListener {
         }
         if (key == KeyEvent.VK_F12) {
             setPlayerLevel(1);
-            System.out.println(getPlayerLevel());
         }
         if (key == KeyEvent.VK_P) {
             DungeonLevelLoader.world.changeLevel("World", "Map2");
@@ -242,11 +239,6 @@ public class Player implements KeyListener {
         if (getStamin() < 100) {
             setStamin(getStamin() + amount);
         }
-        if (getStamin() >= 50) {
-            setTired(false);
-            getPlayerActions().setMsg(false, " ");
-
-        }
     }
 
     public void drawStamina(double amount) {
@@ -276,11 +268,11 @@ public class Player implements KeyListener {
         return this.tired;
     }
 
-    public PlayerActions getPlayerActions() {
+    public static PlayerActions getPlayerActions() {
         return playerAct;
     }
 
-    public PlayerAnimations getPlayerAnimations() {
+    public static PlayerAnimations getPlayerAnimations() {
         return playerAni;
     }
 

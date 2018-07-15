@@ -7,6 +7,8 @@ package my.tdl.generator;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import my.project.gop.main.Vector2F;
+import my.tdl.generator.BlockModel.BlockType;
 
 /**
  *
@@ -69,5 +71,6 @@ public class TileManagerModel {
             block.render(g);
         }
     }
+
 
 }

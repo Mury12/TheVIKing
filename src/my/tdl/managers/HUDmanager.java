@@ -32,6 +32,8 @@ public class HUDmanager {
     private Vector2F lightm = new Vector2F();
     private World world;
 
+    private int[] line = {1, 1};
+
     public HUDmanager(Player player) {
         this.player = player;
         //addLights();
@@ -82,55 +84,15 @@ public class HUDmanager {
         g.fillRect(0, (Main.height * 5) / 6, Main.width, Main.height / 6);
         g.setColor(Color.WHITE);
 
+        //
+        Player.getPlayerAnimations().drawLifeBar(g);
+        Player.getPlayerAnimations().drawStaminBar(g);
+
         //g.drawImage(light, 0, 0, Main.width, Main.height, null);
         g.setFont(new Font("Arial", 0, 10));
-//        g.drawString("x: "+(int)player.getPos().getWorldLocation().xpos, 10, 10);
-//        g.drawString("y: "+(int)player.getPos().getWorldLocation().ypos, 10, 23);
-
         if (world.getPlayer().isDebugging()) {
-            String dbg_string = "[DEBUGGING]";
-            g.drawString(dbg_string + "", 10, 10);
-            g.drawString("MapXpos:      " + (int) world.getWorldPos().xpos, 10, 23);
-            g.drawString("MapYpos:      " + (int) world.getWorldPos().ypos, 10, 36);
-            g.drawString("WBlocks:      " + world.getTiles().getBlocks().size(), 10, 49);
-            g.drawString("CWBlocks:     " + world.getTiles().getLoaded_blocks().size(), 10, 49 + 13);
-            g.drawString("MAXSpeed:     " + world.getPlayer().getPlayerActions().getMaxSpeed(), 10, 49 + 13 * 2);
-            g.drawString("Speed:        " + (int) world.getPlayer().getPlayerActions().getSpeed(), 10, 49 + 13 * 3);
-            g.drawString("Stamin:       " + (int) world.getPlayer().getStamin(), 10, 49 + 13 * 4);
-            g.drawString("keyPressed:   " + (int) world.getPlayer().getKp(), 10, 49 + 13 * 5);;
-
-            g.drawString("moveAmount U: " + world.getPlayer().getPlayerAnimations().moveAmountu, 120, 10);
-            g.drawString("moveAmount D: " + world.getPlayer().getPlayerAnimations().moveAmountd, 120, 23);
-            g.drawString("moveAmount L: " + world.getPlayer().getPlayerAnimations().moveAmountl, 120, 36);
-            g.drawString("moveAmount R: " + world.getPlayer().getPlayerAnimations().moveAmountr, 120, 49);
-            g.drawString("isMoving:     " + world.getPlayer().getPlayerActions().isMoving(), 120, 49 + 13);
-            g.drawString("isRunning:    " + world.getPlayer().getPlayerActions().isRunning(), 120, 49 + 13*2);
-            g.drawString("isTired:      " + world.getPlayer().isTired(), 120, 49 + 13*3);
-
+            debug(g);
         }
-
-        //Polígonos a serem desenhados na tela; ux = int[]={top-r, bot-r, bot-l, top-l] <-- de acordo com a largura
-        int[] ux = new int[]{Main.width, Main.width / 2, Main.width / 2, 0};
-        //uy int[]={top-r, bot-r, bot-l, top-l] de acordo com a altura
-        int[] uy = new int[]{0, Main.height / 2, Main.height / 2, 0};
-        up = new Polygon(ux, uy, ux.length);
-        g.drawPolygon(up);
-
-        int[] dx = new int[]{Main.width, Main.width / 2, Main.width / 2, 0};
-        int[] dy = new int[]{Main.height, Main.height / 2, Main.height / 2, Main.height};
-        down = new Polygon(dx, dy, dx.length);
-        g.drawPolygon(down);
-
-        int[] rx = new int[]{Main.width, Main.width / 2, Main.width / 2, Main.width};
-        int[] ry = new int[]{Main.height, Main.height / 2, Main.height / 2, 0};
-        right = new Polygon(rx, ry, rx.length);
-        g.drawPolygon(right);
-
-        int[] lx = new int[]{0, Main.width / 2, Main.width / 2, 0};
-        int[] ly = new int[]{Main.height, Main.height / 2, Main.height / 2, 0};
-        left = new Polygon(lx, ly, lx.length);
-        g.drawPolygon(left);
-        String msg = "Olá, como vai você?";
     }
 
     public static Polygon getDownPol() {
@@ -147,6 +109,57 @@ public class HUDmanager {
 
     public static Polygon getUpPol() {
         return up;
+    }
+
+    private void debug(Graphics2D g) {
+        String dbg_string = "[DEBUGGING]";
+        //Column 1
+        g.drawString(dbg_string + "", 10, 10);
+        g.drawString("MapXpos:      " + (int) world.getWorldPos().xpos, 10, 23);
+        g.drawString("MapYpos:      " + (int) world.getWorldPos().ypos, 10, 36);
+        g.drawString("WBlocks:      " + world.getTiles().getBlocks().size(), 10, 49);
+        g.drawString("CWBlocks:     " + world.getTiles().getLoaded_blocks().size(), 10, 49 + 13);
+        g.drawString("CurrBlock:    " + world.getCurrentBlock(), 10, 49 + 13 * 2);
+        g.drawString("MAXSpeed:     " + world.getPlayer().getPlayerActions().getMaxSpeed(), 10, 49 + 13 * 3);
+        g.drawString("Speed:        " + (int) world.getPlayer().getPlayerActions().getSpeed(), 10, 49 + 13 * 4);
+        g.drawString("Stamin:       " + (int) world.getPlayer().getStamin(), 10, 49 + 13 * 5);
+        g.drawString("keyPressed:   " + (int) world.getPlayer().getKp(), 10, 49 + 13 * 6);
+        //Column 2
+        g.drawString("moveAmount U: " + world.getPlayer().getPlayerAnimations().moveAmountu, 150, 10);
+        g.drawString("moveAmount D: " + world.getPlayer().getPlayerAnimations().moveAmountd, 150, 23);
+        g.drawString("moveAmount L: " + world.getPlayer().getPlayerAnimations().moveAmountl, 150, 36);
+        g.drawString("moveAmount R: " + world.getPlayer().getPlayerAnimations().moveAmountr, 150, 49);
+        g.drawString("isMoving:     " + world.getPlayer().getPlayerActions().isMoving(), 150, 49 + 13);
+        g.drawString("isRunning:    " + world.getPlayer().getPlayerActions().isRunning(), 150, 49 + 13 * 2);
+        g.drawString("isTired:      " + world.getPlayer().isTired(), 150, 49 + 13 * 3);
+        g.drawString("isMsgSet:     " + world.getPlayer().getPlayerActions().isMsgSet(), 150, 49 + 13 * 4);
+        
+
+        drawDebugPolygon(g);
+    }
+
+    private void drawDebugPolygon(Graphics2D g) {
+        //Polígonos a serem desenhados na tela; ux = int[]={top-r, bot-r, bot-l, top-l] <-- de acordo com a largura
+        int[] ux = new int[]{Main.width, Main.width / 2, Main.width / 2, 0};
+        //uy int[]={top-r, bot-r, bot-l, top-l] de acordo com a altura
+        int[] uy = new int[]{Main.height / 6, Main.height / 2, Main.height / 2, Main.height / 6};
+        up = new Polygon(ux, uy, ux.length);
+        g.drawPolygon(up);
+
+        int[] dx = new int[]{Main.width, Main.width / 2, Main.width / 2, 0};
+        int[] dy = new int[]{Main.height-Main.height/6, Main.height / 2, Main.height / 2, Main.height-Main.height/6};
+        down = new Polygon(dx, dy, dx.length);
+        g.drawPolygon(down);
+//
+//        int[] rx = new int[]{Main.width, Main.width / 2, Main.width / 2, Main.width};
+//        int[] ry = new int[]{Main.height, Main.height / 2, Main.height / 2, 0};
+//        right = new Polygon(rx, ry, rx.length);
+//        g.drawPolygon(right);
+//
+//        int[] lx = new int[]{0, Main.width / 2, Main.width / 2, 0};
+//        int[] ly = new int[]{Main.height, Main.height / 2, Main.height / 2, 0};
+//        left = new Polygon(lx, ly, lx.length);
+//        g.drawPolygon(left);  
     }
 
 }

@@ -497,7 +497,6 @@ public class PlayerAnimations {
     public void drawStaminBar(Graphics2D g) {
 
         g.setColor(new Color(255, (int) (p.getStamin() * 2.5), 0));
-        System.out.println(p.getStamin());
         g.fillRect(115, Main.height - 35, (int) p.getStamin(), 30);
 
         if (p.getStamin() > 50) {
@@ -507,15 +506,12 @@ public class PlayerAnimations {
             g.setColor(Color.WHITE);
 
         }
-        g
-                .drawString("" + (int) p.getStamin(), 168 - 3 * 4, Main.height - 17);
-
-        if (p.isTired()) {
-            if (p.getStamin() < 20) {
-                MessageBaloon.getFinalMessage(p.getPlayerActions().getMsg(), g);
-
-            }
+        g.drawString("" + (int) p.getStamin(), 168 - 3 * 4, Main.height - 17);
+        
+        if (p.getPlayerActions().isMsgSet()) {
+            MessageBaloon.getFinalMessage(p.getPlayerActions().getMsg(), g);
         }
+        
         g.setColor(Color.WHITE);
         g.drawRect(115, Main.height - 35, 100, 30);
 
