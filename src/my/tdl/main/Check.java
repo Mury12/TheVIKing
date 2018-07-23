@@ -15,8 +15,10 @@ import my.tdl.generator.TileManagerController;
  */
 public class Check {
     private TileManagerController tc = new TileManagerController();
+    
     public boolean CollisionPlayerBlock(Point p1, Point p2){
         for(BlockModel block : tc.getBlocksController().getBlockModel()){
+            System.out.println("testing colision on: "+ p1 + " | "+ p2);
             if(block.isSolid()){
                 if(block.contains(p1) || block.contains(p2)){
                     return true;

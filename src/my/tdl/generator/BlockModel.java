@@ -68,6 +68,14 @@ public class BlockModel extends Rectangle {
         this.blocktype = blocktype;
         init();
     }
+        public BlockModel(Vector2F pos, BlockType blocktype, boolean solid) {
+        setBounds((int) pos.xpos, (int) pos.ypos, BlockSize, BlockSize);
+        this.pos = pos;
+        isAlive = true;
+        this.blocktype = blocktype;
+        this.isSolid = solid;
+        init();
+    }
 
     /**
      * This function is responsible to set the solidness of a block.

@@ -24,7 +24,7 @@ import my.tdl.main.Main;
  */
 public class PlayerAnimations {
 
-    Vector2F pos;
+    public static Vector2F pos;
     public static final int scale = 2;
     public static final int width = 22;
     public static final int height = 22;
@@ -60,14 +60,14 @@ public class PlayerAnimations {
         this.p = p;
     }
 
-    public PlayerAnimations(Vector2F pos, World world, Player p) {
-        this.pos = pos;
+    public PlayerAnimations(Vector2F position, World world, Player p) {
+        pos = position;
         this.p = p;
         this.world = world;
     }
 
-    public PlayerAnimations(Vector2F pos, Player p) {
-        this.pos = pos;
+    public PlayerAnimations(Vector2F position, Player p) {
+        pos = position;
         this.p = p;
     }
 
@@ -282,10 +282,10 @@ public class PlayerAnimations {
     public void moveMapUp() {
 
         if (!p.chk.CollisionPlayerBlock(
-                new Point((int) (pos.xpos + world.map_pos.xpos),
-                        (int) (pos.ypos + world.map_pos.ypos - moveAmountu)),
-                new Point((int) (pos.xpos + world.map_pos.xpos + width),
-                        (int) (pos.ypos + world.map_pos.ypos - moveAmountu))
+                new Point((int) (pos.xpos + world.getWorldPos().xpos),
+                        (int) (pos.ypos + world.getWorldPos().ypos - moveAmountu)),
+                new Point((int) (pos.xpos + world.getWorldPos().xpos + width),
+                        (int) (pos.ypos + world.getWorldPos().ypos - moveAmountu))
         )) {
             if (p.getPlayerActions().getSpeed("up") < p.getPlayerActions().getMaxSpeed()) {
                 p.getPlayerActions().setSpeed("up", p.getPlayerActions().getSpeed("up") + p.getPlayerActions().getSlowdown()); //incrementa a velocidade pouco a pouco, para tornar um movimento de ease in-out suave
@@ -297,7 +297,7 @@ public class PlayerAnimations {
             world.map_pos.ypos -= moveAmountu;
         } else {
             p.getPlayerActions().setSpeed("up", 0);
-
+            System.out.println("coliding");
         }
     }
 
@@ -319,7 +319,7 @@ public class PlayerAnimations {
             world.map_pos.ypos -= moveAmountu;
 
         } else {
-            p.getPlayerActions().setSpeed("up", 0);
+            Player.getPlayerActions().setSpeed("up", 0);
 
         }
 

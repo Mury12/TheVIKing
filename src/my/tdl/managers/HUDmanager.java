@@ -9,6 +9,7 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ import my.project.gop.main.Light;
 import my.project.gop.main.Vector2F;
 import my.project.gop.main.loadImageFrom;
 import my.tdl.MoveableObjects.Player;
+import static my.tdl.MoveableObjects.PlayerAnimations.height;
+import static my.tdl.MoveableObjects.PlayerAnimations.width;
 import my.tdl.generator.World;
 import my.tdl.main.Main;
 
@@ -133,7 +136,6 @@ public class HUDmanager {
         g.drawString("isRunning:    " + world.getPlayer().getPlayerActions().isRunning(), 150, 49 + 13 * 2);
         g.drawString("isTired:      " + world.getPlayer().isTired(), 150, 49 + 13 * 3);
         g.drawString("isMsgSet:     " + world.getPlayer().getPlayerActions().isMsgSet(), 150, 49 + 13 * 4);
-        
 
         drawDebugPolygon(g);
     }
@@ -147,7 +149,7 @@ public class HUDmanager {
         g.drawPolygon(up);
 
         int[] dx = new int[]{Main.width, Main.width / 2, Main.width / 2, 0};
-        int[] dy = new int[]{Main.height-Main.height/6, Main.height / 2, Main.height / 2, Main.height-Main.height/6};
+        int[] dy = new int[]{Main.height - Main.height / 6, Main.height / 2, Main.height / 2, Main.height - Main.height / 6};
         down = new Polygon(dx, dy, dx.length);
         g.drawPolygon(down);
 //
@@ -162,4 +164,13 @@ public class HUDmanager {
 //        g.drawPolygon(left);  
     }
 
+    public boolean colided() {
+                player.chk.CollisionPlayerBlock(
+                        new Point((int) (player.getPos().xpos + world.map_pos.xpos),
+                                (int) (player.getPos().ypos + world.map_pos.ypos + height + Player.getPlayerAnimations().moveAmountd)),
+                        new Point((int) (player.getPos().xpos + world.map_pos.xpos + width),
+                                (int) (player.getPos().ypos + world.map_pos.ypos + height + Player.getPlayerAnimations().moveAmountd))
+                );
+        return true;
+    }
 }

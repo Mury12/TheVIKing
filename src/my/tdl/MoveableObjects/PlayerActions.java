@@ -42,6 +42,7 @@ public class PlayerActions {
     public void tick(double deltaTime) {
         
         playerMM.tick();
+        System.out.println(pos.xpos + " | " + pos.ypos);
 
         //realiza a renderização em tempo real apenas dos bloccks no campo
         p.getPlayerAnimations().setRender(new Rectangle(
@@ -58,7 +59,7 @@ public class PlayerActions {
     }
     
     public boolean isMoving() {
-        return this.moving;
+        return moving;
     }
     
     public void setMovingState(boolean b) {
