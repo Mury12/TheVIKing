@@ -15,12 +15,41 @@ import my.tdl.main.Animator;
  */
 public class BlockModel extends Rectangle {
 
+    /**
+     * This variable sets the world position of a tile or block.
+     * @pos
+     */
     public Vector2F pos = new Vector2F();
+    /**
+     * This variable sets the block size in pixels.
+     * Default: 48
+     * @BlockSize 
+     */
     public static int BlockSize = 48; //tamanho do block na tela
+    /**
+     * This variable sets the block type by its BlockType name.
+     * @blocktype
+     */
     public BlockType blocktype;
+    /**
+     * This variable loads the sprite of a block or tile.
+     * @block
+     */
     private BufferedImage block;
+    /**
+     * This variable sets if the block is solid or not.
+     * @isSolid
+     */
     private boolean isSolid;
+    /**
+     * This variable sets if the block is rendered or not.
+     * @isAlive
+     */
     private boolean isAlive;
+    /**
+     * This variable sets if the block is unloaded or not.
+     * @droped
+     */
     private boolean droped = false;
 
     private ArrayList<BufferedImage> listWallTorch;
@@ -40,10 +69,22 @@ public class BlockModel extends Rectangle {
         init();
     }
 
-    //retorna se o bloco é solido ou não
-    public BlockModel isSolid(boolean isSolid) {
+    /**
+     * This function is responsible to set the solidness of a block.
+     * Passing true means that the block is solid and the collision system
+     * will prevent the passing trough otherwise will be a normal tile.
+     * @param isSolid boolean in true for solid and false for tile
+     */
+    public void isSolid(boolean isSolid) {
         this.isSolid = isSolid;
-        return this;
+    }
+    /**
+     * This is responsible to return if a block is solid.
+     * This function is used to set the collision system.
+     * @return boolean for solidness of a block.
+     */
+    public boolean isSolid(){
+        return this.isSolid;
     }
 
     public void init() {
@@ -56,7 +97,11 @@ public class BlockModel extends Rectangle {
             setBounds((int) pos.xpos, (int) pos.ypos, BlockSize, BlockSize);
         }
     }
-
+    /**
+     * This renders the block.
+     * The g element must be passed as the same since the first of type.
+     * @param g Graphics2D object set at the beginning.
+     */
     public void render(Graphics2D g) {
         if (isAlive) {
             if (block != null) {
@@ -66,7 +111,11 @@ public class BlockModel extends Rectangle {
             }
         }
     }
-
+    /**
+     * This function is responsible to get the sprite of a block.
+     * Calling this function after setting blocktype element will convert it into 
+     * an block image to render in the map.
+     */
     public void getBlockType() {
         switch (this.blocktype) {
             //FLOORS
@@ -116,7 +165,11 @@ public class BlockModel extends Rectangle {
                 break;
         }
     }
-
+    /**
+     * This enumerates the type of the block tile.
+     * It's easier to chose the block if there's a name for each one
+     * giving the versatility to name all the blocks instead of color codes. 
+     */
     public enum BlockType {
         //FLOORS
         STONE_1,
@@ -141,22 +194,36 @@ public class BlockModel extends Rectangle {
     }
 
     //define os blocks
-    public boolean isSolid() {
-        return isSolid;
-    }
-
+    /**
+     * This function returns the living state of a block object.
+     * This means that returns true if it is rendered and false otherwise.
+     * @return boolean for a rendered block
+     */
     public boolean isAlive() {
         return isAlive;
     }
 
+    /**
+     * This function represents if the block exists in world.
+     * isAlive is a variable that stores a living state of the block,
+     * setting up the unique block object that exists in rendered in the map.
+     * @param isAlive set as true if rendered.
+     */
     public void setAlive(boolean isAlive) {
         this.isAlive = isAlive;
     }
-
+    /**
+     * This function is responsible for getting the position of an existing block.
+     * @return Vector2F object.
+     */
     public Vector2F getBlockLocation() {
         return pos;
     }
-
+    /**
+     * This function is responsible to return the block tile name.
+     * This means that the type of the selected block of Blocktype be known.
+     * @return String containing the tile name of the block.
+     */
     public String getBlockTypeName() {
         return blocktype.toString();
     }
