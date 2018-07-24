@@ -2,12 +2,12 @@ package my.tdl.generator;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.util.concurrent.CopyOnWriteArrayList;
 import my.project.gop.main.FPS;
 import my.project.gop.main.Vector2F;
 import my.project.gop.main.loadImageFrom;
 import my.tdl.MoveableObjects.Hostile;
 import my.tdl.MoveableObjects.Player;
+import my.tdl.MoveableObjects.PlayerAnimations;
 import my.tdl.gamestate.GameStateManager;
 import my.tdl.gamestates.DungeonLevelLoader;
 import my.tdl.main.Main;
@@ -203,7 +203,12 @@ public class World {
         if (mob != null) {
             mob.render(g);
         }
-
+        g.drawRect(
+                (int) player.getPos().xpos - 10,
+                (int) player.getPos().ypos - 8,
+                PlayerAnimations.width * PlayerAnimations.scale,
+                PlayerAnimations.height * PlayerAnimations.scale
+        );
         if (player.isDebugging()) {
             String str = "BlockEnt";
             g.drawString("BlockEnt:  " + bc.getBlockEnts().size(), Main.width - (str.length() + 5) * 8, 10);
@@ -282,17 +287,53 @@ public class World {
         bc.clearSpawn();
     }
 
-    public BlockModel.BlockType getCurrentBlock() {
+    /**
+     * This function is responsible to return the name of the stepped block.
+     * This means that the block that the character is current over will be
+     * shown with its name. Example: GRASS_1, WALL_1, DIRT_1, and so on.
+     *
+     * @return the block name.
+     */
+    public BlockModel getCurrentBlock() {
         Vector2F pos = getWorldPos();
         int blockSize = BlockModel.BlockSize;
         float xp = (13 * blockSize) + ((int) pos.xpos / blockSize) * blockSize;
         float yp = (7 * blockSize) + ((int) pos.ypos / blockSize) * blockSize;
         for (BlockModel block : tiles.getBlocks()) {
             if (block.pos.ypos == yp && block.pos.xpos == xp) {
-                return block.blocktype;
+                return block;
             }
         }
-        return BlockModel.BlockType.NOT_FOUND;
+        return new BlockModel(new Vector2F(0, 0), BlockModel.BlockType.NOT_FOUND);
+    }
+
+    public BlockModel getNextBlock(String direction) {
+        Vector2F pos = getWorldPos();
+        int blockSize = BlockModel.BlockSize;
+        float factor = 0;
+        switch (direction) {
+            case "up":
+                factor = -blockSize;
+                break;
+            case "down":
+                factor = +blockSize;
+                break;
+            case "left":
+                factor = -blockSize;
+                break;
+            case "right":
+                factor = +blockSize;
+                break;
+
+        }
+        float xp = (13 * blockSize) + ((int) pos.xpos / blockSize) * blockSize + factor;
+        float yp = (7 * blockSize) + ((int) pos.ypos / blockSize) * blockSize + factor;
+        for (BlockModel block : tiles.getBlocks()) {
+            if (block.pos.ypos == yp && block.pos.xpos == xp) {
+                return block;
+            }
+        }
+        return new BlockModel(new Vector2F(0, 0), BlockModel.BlockType.NOT_FOUND);
     }
 
 }

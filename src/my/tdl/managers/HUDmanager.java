@@ -122,11 +122,11 @@ public class HUDmanager {
         g.drawString("MapYpos:      " + (int) world.getWorldPos().ypos, 10, 36);
         g.drawString("WBlocks:      " + world.getTiles().getBlocks().size(), 10, 49);
         g.drawString("CWBlocks:     " + world.getTiles().getLoaded_blocks().size(), 10, 49 + 13);
-        g.drawString("CurrBlock:    " + world.getCurrentBlock(), 10, 49 + 13 * 2);
-        g.drawString("MAXSpeed:     " + world.getPlayer().getPlayerActions().getMaxSpeed(), 10, 49 + 13 * 3);
-        g.drawString("Speed:        " + (int) world.getPlayer().getPlayerActions().getSpeed(), 10, 49 + 13 * 4);
-        g.drawString("Stamin:       " + (int) world.getPlayer().getStamin(), 10, 49 + 13 * 5);
-        g.drawString("keyPressed:   " + (int) world.getPlayer().getKp(), 10, 49 + 13 * 6);
+        g.drawString("CurrBlock:    " + world.getCurrentBlock().getBlockTypeName(), 10, 49 + 13 * 2);
+        g.drawString("BlockSolid:   " + world.getCurrentBlock().isSolid(), 10, 49 + 13 * 3);
+        g.drawString("MAXSpeed:     " + world.getPlayer().getPlayerActions().getMaxSpeed(), 10, 49 + 13 * 4);
+        g.drawString("Speed:        " + (int) world.getPlayer().getPlayerActions().getSpeed(), 10, 49 + 13 * 5);
+        g.drawString("Stamin:       " + (int) world.getPlayer().getStamin(), 10, 49 + 13 * 6);
         //Column 2
         g.drawString("moveAmount U: " + world.getPlayer().getPlayerAnimations().moveAmountu, 150, 10);
         g.drawString("moveAmount D: " + world.getPlayer().getPlayerAnimations().moveAmountd, 150, 23);
@@ -136,6 +136,20 @@ public class HUDmanager {
         g.drawString("isRunning:    " + world.getPlayer().getPlayerActions().isRunning(), 150, 49 + 13 * 2);
         g.drawString("isTired:      " + world.getPlayer().isTired(), 150, 49 + 13 * 3);
         g.drawString("isMsgSet:     " + world.getPlayer().getPlayerActions().isMsgSet(), 150, 49 + 13 * 4);
+        g.drawString("keyPressed:   " + (int) world.getPlayer().getKp(), 150, 49 + 13 * 6);
+        //Column 3
+        g.drawString("Surrounding Blocks:", 320, 10);
+        g.drawString("UBlock:   " + world.getNextBlock("up").blocktype, 320, 23);
+        g.drawString("DBlock:   " + world.getNextBlock("down").blocktype, 320, 36);
+        g.drawString("LBlock:   " + world.getNextBlock("left").blocktype, 320, 49);
+        g.drawString("RBlock:   " + world.getNextBlock("right").blocktype, 320, 49 + 13);
+        //Column 4
+        g.drawString("Colliding:", 470, 10);
+        g.drawString("" + world.getPlayer().chk.hasColided(world, "up"), 470, 23);
+        g.drawString("" + world.getPlayer().chk.hasColided(world, "down"), 470, 36);
+        g.drawString("" + world.getPlayer().chk.hasColided(world, "left"), 470, 49);
+        g.drawString("" + world.getPlayer().chk.hasColided(world, "right"), 470, 49+13);
+
 
         drawDebugPolygon(g);
     }
@@ -162,15 +176,5 @@ public class HUDmanager {
 //        int[] ly = new int[]{Main.height, Main.height / 2, Main.height / 2, 0};
 //        left = new Polygon(lx, ly, lx.length);
 //        g.drawPolygon(left);  
-    }
-
-    public boolean colided() {
-                player.chk.CollisionPlayerBlock(
-                        new Point((int) (player.getPos().xpos + world.map_pos.xpos),
-                                (int) (player.getPos().ypos + world.map_pos.ypos + height + Player.getPlayerAnimations().moveAmountd)),
-                        new Point((int) (player.getPos().xpos + world.map_pos.xpos + width),
-                                (int) (player.getPos().ypos + world.map_pos.ypos + height + Player.getPlayerAnimations().moveAmountd))
-                );
-        return true;
     }
 }
