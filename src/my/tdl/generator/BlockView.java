@@ -13,7 +13,15 @@ import my.project.gop.main.Vector2F;
  */
 public class BlockView extends Rectangle{
     
+    /**
+     * This is the world position of the block.
+     * @pos
+     */
     private Vector2F pos;
+    /**
+     * This is the block sprite itself.
+     * @block_image
+     */
     private BufferedImage block_image;    
     private double rotation;
     private double rotation_speed = 0.8;
@@ -22,6 +30,10 @@ public class BlockView extends Rectangle{
     private int lifeTime;
     private boolean isDying;
     private float lifeFade = 1.0f;
+    /**
+     * This is the world map wanted to render the view.
+     * @world
+     */
     private World world;
             
     public BlockView(Vector2F pos, BufferedImage block_image) {
@@ -36,7 +48,12 @@ public class BlockView extends Rectangle{
         setBounds((int)pos.xpos, (int)pos.ypos, (int)blockSize, (int)blockSize);
         isAlive = true;
     }
-    
+    /**
+     * This function is responsible for the block refreshing.
+     * This means that at each delta time passed the sprites will be 
+     * refreshed.
+     * @param deltaTime sets the time to refresh.
+     */
     public void tick(double deltaTime){
         if(isAlive){
             rotation -= rotation_speed;
@@ -69,7 +86,10 @@ public class BlockView extends Rectangle{
             }
         }
     }
-    
+    /**
+     * This function is responsible for rendering the blocks sprites on the map.
+     * @param g 
+     */
     public void render(Graphics2D g){
         if(isAlive){
             if(isDying){
@@ -102,7 +122,11 @@ public class BlockView extends Rectangle{
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
         }
     }
-    
+    /**
+     * This function is responsible for setting the aliveness of the block.
+     * This means that the block is rendered.
+     * @param isAlive 
+     */
     public void setAlive(boolean isAlive){
         this.isAlive = isAlive;
     }

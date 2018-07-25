@@ -64,7 +64,6 @@ public class Player implements KeyListener {
                 playerAni.getRenderDistanceW() * 48,
                 playerAni.getRenderDistanceH() * 48)
         );
-
         playerAni.animatePlayer();
         playerAct.spawn(true);
     }

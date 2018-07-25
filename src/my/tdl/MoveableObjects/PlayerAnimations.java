@@ -24,7 +24,7 @@ import my.tdl.main.Main;
  */
 public class PlayerAnimations {
 
-    Vector2F pos;
+    public static Vector2F pos;
     public static final int scale = 2;
     public static final int width = 22;
     public static final int height = 22;
@@ -60,14 +60,14 @@ public class PlayerAnimations {
         this.p = p;
     }
 
-    public PlayerAnimations(Vector2F pos, World world, Player p) {
-        this.pos = pos;
+    public PlayerAnimations(Vector2F position, World world, Player p) {
+        pos = position;
         this.p = p;
         this.world = world;
     }
 
-    public PlayerAnimations(Vector2F pos, Player p) {
-        this.pos = pos;
+    public PlayerAnimations(Vector2F position, Player p) {
+        pos = position;
         this.p = p;
     }
 
@@ -281,15 +281,9 @@ public class PlayerAnimations {
     //
     public void moveMapUp() {
 
-        if (!p.chk.CollisionPlayerBlock(
-                new Point((int) (pos.xpos + world.map_pos.xpos),
-                        (int) (pos.ypos + world.map_pos.ypos - moveAmountu)),
-                new Point((int) (pos.xpos + world.map_pos.xpos + width),
-                        (int) (pos.ypos + world.map_pos.ypos - moveAmountu))
-        )) {
+        if (!p.chk.hasColided(world, "up")) {
             if (p.getPlayerActions().getSpeed("up") < p.getPlayerActions().getMaxSpeed()) {
                 p.getPlayerActions().setSpeed("up", p.getPlayerActions().getSpeed("up") + p.getPlayerActions().getSlowdown()); //incrementa a velocidade pouco a pouco, para tornar um movimento de ease in-out suave
-
             } else {
                 p.getPlayerActions().setSpeed("", p.getPlayerActions().getMaxSpeed());
 
@@ -297,17 +291,12 @@ public class PlayerAnimations {
             world.map_pos.ypos -= moveAmountu;
         } else {
             p.getPlayerActions().setSpeed("up", 0);
-
+            System.out.println("coliding");
         }
     }
 
     public void moveMapUpGlide() {
-        if (!p.chk.CollisionPlayerBlock(
-                new Point((int) (pos.xpos + world.map_pos.xpos),
-                        (int) (pos.ypos + world.map_pos.ypos - moveAmountu)),
-                new Point((int) (pos.xpos + world.map_pos.xpos + width),
-                        (int) (pos.ypos + world.map_pos.ypos - moveAmountu))
-        )) {
+       if (!p.chk.hasColided(world, "up")) {
             if (p.getPlayerActions().getSpeed("up") != 0) {
                 p.getPlayerActions().setSpeed("up", p.getPlayerActions().getSpeed("up") - p.getPlayerActions().getSlowdown());
 
@@ -319,7 +308,7 @@ public class PlayerAnimations {
             world.map_pos.ypos -= moveAmountu;
 
         } else {
-            p.getPlayerActions().setSpeed("up", 0);
+            Player.getPlayerActions().setSpeed("up", 0);
 
         }
 
@@ -327,12 +316,7 @@ public class PlayerAnimations {
 
     public void moveMapDown() {
 
-        if (!p.chk.CollisionPlayerBlock(
-                new Point((int) (pos.xpos + world.map_pos.xpos),
-                        (int) (pos.ypos + world.map_pos.ypos + height + moveAmountd)),
-                new Point((int) (pos.xpos + world.map_pos.xpos + width),
-                        (int) (pos.ypos + world.map_pos.ypos + height + moveAmountd))
-        )) {
+        if (!p.chk.hasColided(world, "down")) {
             if (p.getPlayerActions().getSpeed("down") < p.getPlayerActions().getMaxSpeed()) {
                 p.getPlayerActions().setSpeed("down", p.getPlayerActions().getSpeed("down") + p.getPlayerActions().getSlowdown());
 
@@ -350,13 +334,7 @@ public class PlayerAnimations {
 
     public void moveMapDownGlide() {
 
-        if (!p.chk
-                .CollisionPlayerBlock(
-                        new Point((int) (pos.xpos + world.map_pos.xpos),
-                                (int) (pos.ypos + world.map_pos.ypos + height + moveAmountd)),
-                        new Point((int) (pos.xpos + world.map_pos.xpos + width),
-                                (int) (pos.ypos + world.map_pos.ypos + height + moveAmountd))
-                )) {
+       if (!p.chk.hasColided(world, "down")) {
             if (p.getPlayerActions().getSpeed("down") != 0) {
                 p.getPlayerActions().setSpeed("down", p.getPlayerActions().getSpeed("down") - p.getPlayerActions().getSlowdown());
 
@@ -376,12 +354,7 @@ public class PlayerAnimations {
 
     public void moveMapLeft() {
 
-        if (!p.chk.CollisionPlayerBlock(
-                new Point((int) (pos.xpos + world.map_pos.xpos - moveAmountl),
-                        (int) (pos.ypos + world.map_pos.ypos)),
-                new Point((int) (pos.xpos + world.map_pos.xpos - moveAmountl),
-                        (int) (pos.ypos + world.map_pos.ypos))
-        )) {
+        if (!p.chk.hasColided(world, "left")) {
             if (p.getPlayerActions().getSpeed("left") < p.getPlayerActions().getMaxSpeed()) {
                 p.getPlayerActions().setSpeed(
                         "left", p.getPlayerActions().getSpeed("left")
@@ -400,12 +373,7 @@ public class PlayerAnimations {
     }
 
     public void moveMapLeftGlide() {
-        if (!p.chk.CollisionPlayerBlock(
-                new Point((int) (pos.xpos + world.map_pos.xpos - moveAmountl),
-                        (int) (pos.ypos + world.map_pos.ypos)),
-                new Point((int) (pos.xpos + world.map_pos.xpos - moveAmountl),
-                        (int) (pos.ypos + world.map_pos.ypos + height))
-        )) {
+        if (!p.chk.hasColided(world, "left")) {
             if (p.getPlayerActions().getSpeed("left") != 0) {
                 p.getPlayerActions().setSpeed("left", p.getPlayerActions().getSpeed("left") - p.getPlayerActions().getSlowdown());
 
@@ -424,12 +392,7 @@ public class PlayerAnimations {
 
     public void moveMapRight() {
 
-        if (!p.chk.CollisionPlayerBlock(
-                new Point((int) (pos.xpos + world.map_pos.xpos + width + moveAmountr),
-                        (int) (pos.ypos + world.map_pos.ypos)),
-                new Point((int) (pos.xpos + world.map_pos.xpos + width + moveAmountr),
-                        (int) (pos.ypos + world.map_pos.ypos + height))
-        )) {
+        if (!p.chk.hasColided(world, "right")) {
             if (p.getPlayerActions().getSpeed("right") < p.getPlayerActions().getMaxSpeed()) {
                 p.getPlayerActions().setSpeed("right", p.getPlayerActions().getSpeed("right") + p.getPlayerActions().getSlowdown());
 
@@ -447,12 +410,7 @@ public class PlayerAnimations {
     }
 
     public void moveMapRightGlide() {
-        if (!p.chk.CollisionPlayerBlock(
-                new Point((int) (pos.xpos + world.map_pos.xpos + width + moveAmountr),
-                        (int) (pos.ypos + world.map_pos.ypos)),
-                new Point((int) (pos.xpos + world.map_pos.xpos + width + moveAmountr),
-                        (int) (pos.ypos + world.map_pos.ypos + height))
-        )) {
+       if (!p.chk.hasColided(world, "right")) {
             if (p.getPlayerActions().getSpeed("right") != 0) {
                 p.getPlayerActions().setSpeed("right", p.getPlayerActions().getSpeed("right") - p.getPlayerActions().getSlowdown());
 
@@ -507,11 +465,11 @@ public class PlayerAnimations {
 
         }
         g.drawString("" + (int) p.getStamin(), 168 - 3 * 4, Main.height - 17);
-        
+
         if (p.getPlayerActions().isMsgSet()) {
             MessageBaloon.getFinalMessage(p.getPlayerActions().getMsg(), g);
         }
-        
+
         g.setColor(Color.WHITE);
         g.drawRect(115, Main.height - 35, 100, 30);
 

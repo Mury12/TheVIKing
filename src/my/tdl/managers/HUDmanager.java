@@ -9,6 +9,7 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ import my.project.gop.main.Light;
 import my.project.gop.main.Vector2F;
 import my.project.gop.main.loadImageFrom;
 import my.tdl.MoveableObjects.Player;
+import static my.tdl.MoveableObjects.PlayerAnimations.height;
+import static my.tdl.MoveableObjects.PlayerAnimations.width;
 import my.tdl.generator.World;
 import my.tdl.main.Main;
 
@@ -119,11 +122,11 @@ public class HUDmanager {
         g.drawString("MapYpos:      " + (int) world.getWorldPos().ypos, 10, 36);
         g.drawString("WBlocks:      " + world.getTiles().getBlocks().size(), 10, 49);
         g.drawString("CWBlocks:     " + world.getTiles().getLoaded_blocks().size(), 10, 49 + 13);
-        g.drawString("CurrBlock:    " + world.getCurrentBlock(), 10, 49 + 13 * 2);
-        g.drawString("MAXSpeed:     " + world.getPlayer().getPlayerActions().getMaxSpeed(), 10, 49 + 13 * 3);
-        g.drawString("Speed:        " + (int) world.getPlayer().getPlayerActions().getSpeed(), 10, 49 + 13 * 4);
-        g.drawString("Stamin:       " + (int) world.getPlayer().getStamin(), 10, 49 + 13 * 5);
-        g.drawString("keyPressed:   " + (int) world.getPlayer().getKp(), 10, 49 + 13 * 6);
+        g.drawString("CurrBlock:    " + world.getCurrentBlock().getBlockTypeName(), 10, 49 + 13 * 2);
+        g.drawString("BlockSolid:   " + world.getCurrentBlock().isSolid(), 10, 49 + 13 * 3);
+        g.drawString("MAXSpeed:     " + world.getPlayer().getPlayerActions().getMaxSpeed(), 10, 49 + 13 * 4);
+        g.drawString("Speed:        " + (int) world.getPlayer().getPlayerActions().getSpeed(), 10, 49 + 13 * 5);
+        g.drawString("Stamin:       " + (int) world.getPlayer().getStamin(), 10, 49 + 13 * 6);
         //Column 2
         g.drawString("moveAmount U: " + world.getPlayer().getPlayerAnimations().moveAmountu, 150, 10);
         g.drawString("moveAmount D: " + world.getPlayer().getPlayerAnimations().moveAmountd, 150, 23);
@@ -133,7 +136,20 @@ public class HUDmanager {
         g.drawString("isRunning:    " + world.getPlayer().getPlayerActions().isRunning(), 150, 49 + 13 * 2);
         g.drawString("isTired:      " + world.getPlayer().isTired(), 150, 49 + 13 * 3);
         g.drawString("isMsgSet:     " + world.getPlayer().getPlayerActions().isMsgSet(), 150, 49 + 13 * 4);
-        
+        g.drawString("keyPressed:   " + (int) world.getPlayer().getKp(), 150, 49 + 13 * 6);
+        //Column 3
+        g.drawString("Surrounding Blocks:", 320, 10);
+        g.drawString("UBlock:   " + world.getNextBlock("up", 0).blocktype, 320, 23);
+        g.drawString("DBlock:   " + world.getNextBlock("down", 0).blocktype, 320, 36);
+        g.drawString("LBlock:   " + world.getNextBlock("left", 0).blocktype, 320, 49);
+        g.drawString("RBlock:   " + world.getNextBlock("right", 0).blocktype, 320, 49 + 13);
+        //Column 4
+        g.drawString("Colliding:", 470, 10);
+        g.drawString("" + world.getPlayer().chk.hasColided(world, "up"), 470, 23);
+        g.drawString("" + world.getPlayer().chk.hasColided(world, "down"), 470, 36);
+        g.drawString("" + world.getPlayer().chk.hasColided(world, "left"), 470, 49);
+        g.drawString("" + world.getPlayer().chk.hasColided(world, "right"), 470, 49+13);
+
 
         drawDebugPolygon(g);
     }
@@ -147,7 +163,7 @@ public class HUDmanager {
         g.drawPolygon(up);
 
         int[] dx = new int[]{Main.width, Main.width / 2, Main.width / 2, 0};
-        int[] dy = new int[]{Main.height-Main.height/6, Main.height / 2, Main.height / 2, Main.height-Main.height/6};
+        int[] dy = new int[]{Main.height - Main.height / 6, Main.height / 2, Main.height / 2, Main.height - Main.height / 6};
         down = new Polygon(dx, dy, dx.length);
         g.drawPolygon(down);
 //
@@ -161,5 +177,4 @@ public class HUDmanager {
 //        left = new Polygon(lx, ly, lx.length);
 //        g.drawPolygon(left);  
     }
-
 }
