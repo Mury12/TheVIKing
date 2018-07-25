@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import my.project.gop.main.Vector2F;
 import my.tdl.generator.BlockModel.BlockType;
+import my.tdl.managers.HUDmanager;
 
 /**
  *
@@ -46,7 +47,7 @@ public class TileManagerModel {
                 }
                 block.setAlive(false);
             }
-            if (!world.getPlayer().isDebugging()) {
+            if (!HUDmanager.isDebugging()) {
                 if (!loaded_blocks.isBlockModelEmpty()) {
                     loaded_blocks.clearBlockModel();
                 }

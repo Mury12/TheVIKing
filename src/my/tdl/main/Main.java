@@ -10,12 +10,15 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import static javax.swing.Spring.height;
 import static javax.swing.Spring.width;
 import my.project.gop.main.GameWindow;
 import my.tdl.MoveableObjects.Player;
 import my.tdl.gameloop.GameLoop;
+import my.tdl.managers.HUDmanager;
+import my.tdl.managers.KeyManager;
 import my.tdl.managers.Mousemanager;
 
 /**
@@ -40,7 +43,7 @@ public class Main {
         frame.addMouseMotionListener(new Mousemanager());
         frame.addMouseWheelListener(new Mousemanager());
         
-        frame.addKeyListener(new Player());
+        frame.addKeyListener(new KeyManager());
         frame.add(new GameLoop(width, height));
         frame.setVisible(true);
         /*blocks.setSpriteSheet("../img/spritesheet.png");

@@ -220,7 +220,7 @@ public class PlayerActions {
         this.typing = false;
     }
     
-    void resetChat() {
+    public void resetChat() {
         this.message_sent = false;
         this.typing = false;
         this.chatBox = false;
