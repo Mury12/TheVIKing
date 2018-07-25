@@ -32,9 +32,9 @@ public class Player {
     private final BufferedImage msg_bgtail = loadImageFrom.LoadImageFrom(Main.class, "msg_tailbg.png");
     private final BufferedImage msg_bgright = loadImageFrom.LoadImageFrom(Main.class, "msg_bgright.png");
 
-    public double stamina = 100;
+    public static double stamina = 100;
     private static int playerLevel = 1;
-    private double lifePoints = 105;
+    private static double lifePoints = 105;
 
     public Check chk = new Check();
     private static boolean tired;
@@ -70,10 +70,11 @@ public class Player {
     //O MÉTODO TICK É RESPONSÁVEL POR ATUALIZAR AS INFORMAÇÕES PROCESSADAS NO GAME
     //sistema de cansaço
     /**
-     * Stamina Alert
-     * This method is responsible for random select a message to display when player's stamina is out.
-     * To add more sentences, just use a new array line adding msg.add("Your Blowing Message") and the function
+     * Stamina Alert This method is responsible for random select a message to
+     * display when player's stamina is out. To add more sentences, just use a
+     * new array line adding msg.add("Your Blowing Message") and the function
      * will automatically calculate the random number from the Array to select.
+     *
      * @return a final message.
      */
     public String randomStaminAlert() {
@@ -85,7 +86,7 @@ public class Player {
         msg.add("PLEASE BABY! LET ME REST A LITTLE!!");
         msg.add("F**K! I HATE THIS HUNTS!");
         msg.add("HELLS BELLS! I really wanted to catch it but.. you know.. I'm a FAG!");
-        
+
         return msg.get(rand.nextInt(msg.size()));
     }
 
@@ -121,11 +122,10 @@ public class Player {
      * Stamina Drawing This is used to draw stamina from the character total
      * stamina. For a while it is used only by the running system.
      *
-     * @param amount is the amount wanted for tick refresh. Default: 0.5
      */
-    public void drawStamina(double amount) {
-        if (getStamin() > 0) {
-            setStamin(getStamin() - amount);
+    public void drawStamina() {
+        if (getStamin() > 1) {
+            setStamin(getStamin() - ((double)((playerLevel+1)/Math.pow(playerLevel, 1.1))));
         }
     }
 
@@ -159,7 +159,7 @@ public class Player {
      * @return a double (converted to integer on showing) value.
      */
     public double getLifePoints() {
-        return lifePoints + (playerLevel + 1) * 13 + 5;
+        return lifePoints;
     }
 
     /**
@@ -185,8 +185,7 @@ public class Player {
     }
 
     /**
-     * GET Player Level This function is responsible for getting the level of
-     * the player.
+     * This function is responsible for getting the level of the player.
      *
      * @return an integer indicating the player level.
      */
@@ -195,22 +194,46 @@ public class Player {
     }
 
     /**
-     * SET Player Level This function is responsible for increase player's
-     * level.
+     * This function is responsible for increase player's level.
      *
      * @param plus will be calculated based on Experience Points given to the
      * player and then converted to level.
      */
     public void setPlayerLevel(int plus) {
         playerLevel = getPlayerLevel() + 1;
+        setLifePoints();
+        setStamin();
     }
 
-    public double getStamin() {
-        return this.stamina;
+    public static double getStamin() {
+        return stamina;
     }
 
-    public void setStamin(double d) {
-        this.stamina = d;
+    /**
+     * This function is responsible for setting up the initial player's stamina.
+     *
+     * @param d the amount of initial stamina.
+     */
+    public static void setStamin(double d) {
+        stamina = d;
+    }
+
+    /**
+     * This function is responsible for updating player's stamina points. This
+     * means that the Stamina Points will be calculated by the level, abilities
+     * and equipments wielded.
+     */
+    public void setStamin() {
+        stamina = 100;
+    }
+
+    /**
+     * This function is responsible for updating player's life points. The Life
+     * Points are calculates by the level, class, abilities and equipments
+     * wielded.
+     */
+    private void setLifePoints() {
+        lifePoints = 100 + (playerLevel + 1) * 13 + 5;
     }
 
 }

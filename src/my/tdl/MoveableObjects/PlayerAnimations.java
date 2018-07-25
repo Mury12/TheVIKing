@@ -454,7 +454,7 @@ public class PlayerAnimations {
 
     public void drawStaminBar(Graphics2D g) {
 
-        g.setColor(new Color(255, (int) (p.getStamin() * 2.5), 0));
+        g.setColor(new Color(255, 1 + (int) (p.getStamin()*2.49), 0));
         g.fillRect(115, Main.height - 35, (int) p.getStamin(), 30);
 
         if (p.getStamin() > 50) {
