@@ -27,7 +27,7 @@ public class Check {
      * @return boolean that indicates the pass-through property.
      */
     public boolean hasColided(World w, String direction){
-        if(w.getNextBlock(direction).isSolid()){
+        if(w.getNextBlock(direction,1).isSolid()){
             return true;
         }
         return false;

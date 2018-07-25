@@ -139,10 +139,10 @@ public class HUDmanager {
         g.drawString("keyPressed:   " + (int) world.getPlayer().getKp(), 150, 49 + 13 * 6);
         //Column 3
         g.drawString("Surrounding Blocks:", 320, 10);
-        g.drawString("UBlock:   " + world.getNextBlock("up").blocktype, 320, 23);
-        g.drawString("DBlock:   " + world.getNextBlock("down").blocktype, 320, 36);
-        g.drawString("LBlock:   " + world.getNextBlock("left").blocktype, 320, 49);
-        g.drawString("RBlock:   " + world.getNextBlock("right").blocktype, 320, 49 + 13);
+        g.drawString("UBlock:   " + world.getNextBlock("up", 0).blocktype, 320, 23);
+        g.drawString("DBlock:   " + world.getNextBlock("down", 0).blocktype, 320, 36);
+        g.drawString("LBlock:   " + world.getNextBlock("left", 0).blocktype, 320, 49);
+        g.drawString("RBlock:   " + world.getNextBlock("right", 0).blocktype, 320, 49 + 13);
         //Column 4
         g.drawString("Colliding:", 470, 10);
         g.drawString("" + world.getPlayer().chk.hasColided(world, "up"), 470, 23);

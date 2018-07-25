@@ -1,7 +1,9 @@
 package my.tdl.generator;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.util.Vector;
 import my.project.gop.main.FPS;
 import my.project.gop.main.Vector2F;
 import my.project.gop.main.loadImageFrom;
@@ -296,40 +298,74 @@ public class World {
      */
     public BlockModel getCurrentBlock() {
         Vector2F pos = getWorldPos();
+        Vector2F pPos = PlayerAnimations.pos;
         int blockSize = BlockModel.BlockSize;
-        float xp = (13 * blockSize) + ((int) pos.xpos / blockSize) * blockSize;
-        float yp = (7 * blockSize) + ((int) pos.ypos / blockSize) * blockSize;
+        int xp = (int) (PlayerAnimations.pos.xpos + pos.xpos);
+        int yp = (int) (PlayerAnimations.pos.ypos + pos.ypos);
         for (BlockModel block : tiles.getBlocks()) {
-            if (block.pos.ypos == yp && block.pos.xpos == xp) {
+            if (block.contains(new Point(xp, yp))) {
                 return block;
             }
         }
         return new BlockModel(new Vector2F(0, 0), BlockModel.BlockType.NOT_FOUND);
     }
-
-    public BlockModel getNextBlock(String direction) {
+    /**
+     * This function is responsible for getting the next block for checking and collision.
+     * This means that this function will return a different value for each purpose beeing
+     * collision or simply the next block for every direction.
+     * @param direction the direction wanted: up, down, left and right.
+     * @param purpose the purpose: 0 for next blocks, 1 for collision check next block.
+     * @return a BlockModel object.
+     */
+    public BlockModel getNextBlock(String direction, int purpose) {
         Vector2F pos = getWorldPos();
         int blockSize = BlockModel.BlockSize;
-        float factor = 0;
-        switch (direction) {
-            case "up":
-                factor = -blockSize;
-                break;
-            case "down":
-                factor = +blockSize;
-                break;
-            case "left":
-                factor = -blockSize;
-                break;
-            case "right":
-                factor = +blockSize;
-                break;
+        int p1 = 0, p2 = 0;
+        if (purpose == 1) {
+            switch (direction) {
+                case "up":
+                    p2 = -10;
+                    p1 = 0;
+                    break;
+                case "down":
+                    p2 = +30;
+                    p1 = 0;
+                    break;
+                case "left":
+                    p1 = -15;
+                    p2 = 0;
+                    break;
+                case "right":
+                    p1 = +30;
+                    p2 = 0;
+                    break;
 
+            }
+        } else {
+            switch (direction) {
+                case "up":
+                    p2 = -blockSize;
+                    p1 = 0;
+                    break;
+                case "down":
+                    p2 = +blockSize;
+                    p1 = 0;
+                    break;
+                case "left":
+                    p1 = -blockSize;
+                    p2 = 0;
+                    break;
+                case "right":
+                    p1 = +blockSize;
+                    p2 = 0;
+                    break;
+
+            }
         }
-        float xp = (13 * blockSize) + ((int) pos.xpos / blockSize) * blockSize + factor;
-        float yp = (7 * blockSize) + ((int) pos.ypos / blockSize) * blockSize + factor;
+        int xp = (int) (PlayerAnimations.pos.xpos + pos.xpos) + p1;
+        int yp = (int) (PlayerAnimations.pos.ypos + pos.ypos) + p2;
         for (BlockModel block : tiles.getBlocks()) {
-            if (block.pos.ypos == yp && block.pos.xpos == xp) {
+            if (block.contains(new Point(xp, yp))) {
                 return block;
             }
         }
