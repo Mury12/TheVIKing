@@ -86,7 +86,7 @@ public class PlayerActions {
         
         if (!p.isTired()) {
             if (isMoving() && isRunning()) {
-                p.drawStamina(0.5);
+                p.drawStamina();
             }
         } else {
             if (p.getStamin() >= 50) {
