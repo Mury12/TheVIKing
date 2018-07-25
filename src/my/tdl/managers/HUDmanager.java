@@ -34,15 +34,17 @@ public class HUDmanager {
     public ArrayList<Light> lights = new ArrayList<>();
     private Vector2F lightm = new Vector2F();
     private World world;
+    public static boolean debug = false;
 
     private int[] line = {1, 1};
 
+    public HUDmanager(){}
     public HUDmanager(Player player) {
         this.player = player;
         //addLights();
         light = loadImageFrom.LoadImageFrom(Main.class, "light.png");
     }
-
+    
     public HUDmanager(World world) {
         this.world = world;
     }
@@ -93,7 +95,7 @@ public class HUDmanager {
 
         //g.drawImage(light, 0, 0, Main.width, Main.height, null);
         g.setFont(new Font("Arial", 0, 10));
-        if (world.getPlayer().isDebugging()) {
+        if (isDebugging()) {
             debug(g);
         }
     }
@@ -136,7 +138,7 @@ public class HUDmanager {
         g.drawString("isRunning:    " + world.getPlayer().getPlayerActions().isRunning(), 150, 49 + 13 * 2);
         g.drawString("isTired:      " + world.getPlayer().isTired(), 150, 49 + 13 * 3);
         g.drawString("isMsgSet:     " + world.getPlayer().getPlayerActions().isMsgSet(), 150, 49 + 13 * 4);
-        g.drawString("keyPressed:   " + (int) world.getPlayer().getKp(), 150, 49 + 13 * 6);
+        g.drawString("keyPressed:   " + (int) KeyManager.getKp(), 150, 49 + 13 * 6);
         //Column 3
         g.drawString("Surrounding Blocks:", 320, 10);
         g.drawString("UBlock:   " + world.getNextBlock("up", 0).blocktype, 320, 23);
@@ -148,8 +150,7 @@ public class HUDmanager {
         g.drawString("" + world.getPlayer().chk.hasColided(world, "up"), 470, 23);
         g.drawString("" + world.getPlayer().chk.hasColided(world, "down"), 470, 36);
         g.drawString("" + world.getPlayer().chk.hasColided(world, "left"), 470, 49);
-        g.drawString("" + world.getPlayer().chk.hasColided(world, "right"), 470, 49+13);
-
+        g.drawString("" + world.getPlayer().chk.hasColided(world, "right"), 470, 49 + 13);
 
         drawDebugPolygon(g);
     }
@@ -176,5 +177,9 @@ public class HUDmanager {
 //        int[] ly = new int[]{Main.height, Main.height / 2, Main.height / 2, 0};
 //        left = new Polygon(lx, ly, lx.length);
 //        g.drawPolygon(left);  
+    }
+
+    public static boolean isDebugging() {
+        return debug;
     }
 }
