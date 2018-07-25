@@ -13,6 +13,7 @@ import my.tdl.MoveableObjects.PlayerAnimations;
 import my.tdl.gamestate.GameStateManager;
 import my.tdl.gamestates.DungeonLevelLoader;
 import my.tdl.main.Main;
+import my.tdl.managers.HUDmanager;
 
 /**
  *
@@ -211,7 +212,7 @@ public class World {
                 PlayerAnimations.width * PlayerAnimations.scale,
                 PlayerAnimations.height * PlayerAnimations.scale
         );
-        if (player.isDebugging()) {
+        if (HUDmanager.isDebugging()) {
             String str = "BlockEnt";
             g.drawString("BlockEnt:  " + bc.getBlockEnts().size(), Main.width - (str.length() + 5) * 8, 10);
             g.drawString("FPS:  " + (int) fps.getFps(), Main.width - (str.length() + 5) * 8, 23);
